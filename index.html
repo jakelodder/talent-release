@@ -528,6 +528,112 @@
         margin-bottom: 4px;
       }
 
+      /* Lock button styles */
+      .lock-button {
+        position: relative;
+        padding: 8px;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s ease;
+        border: 2px solid var(--border);
+        background: var(--bg-primary);
+      }
+
+      .lock-button:hover {
+        background: var(--bg-tertiary);
+      }
+
+      .lock-button.locked {
+        color: var(--danger);
+        border-color: var(--danger);
+      }
+
+      .lock-button.holding {
+        transform: scale(1.1);
+      }
+
+      .lock-progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top-color: var(--primary);
+        opacity: 0;
+        transform: rotate(0deg);
+        transition: opacity 0.2s ease;
+      }
+
+      .lock-progress.active {
+        opacity: 1;
+        animation: lockProgress 3s linear;
+      }
+
+      @keyframes lockProgress {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      // Clear History with Confirmation
+      function clearHistoryWithConfirmation() {
+        if (isFormLocked) {
+          alert("Form is locked. Press and hold the lock button for 3 seconds to unlock.");
+          return;
+        }
+
+        const submissions = JSON.parse(
+          localStorage.getItem("submissions") || "[]"
+        );
+        
+        if (submissions.length === 0) {
+          alert("No history to clear.");
+          return;
+        }
+
+        // Create custom confirmation dialog
+        const confirmed = confirm(
+          `Are you sure you want to clear all form history?\n\n` +
+          `This will permanently delete ${submissions.length} submission${submissions.length === 1 ? '' : 's'}.\n\n` +
+          `This action cannot be undone.`
+        );
+
+        if (confirmed) {
+          // Clear the submissions from localStorage
+          localStorage.removeItem("submissions");
+          
+          // Reload the history view to show empty state
+          loadHistory();
+          
+          // Show success message
+          alert("Form history has been cleared successfully.");
+        }
+      }
+
+      .lock-icon {
+        font-size: 16px;
+        z-index: 1;
+      }
+
+      .form-locked-indicator {
+        color: var(--danger);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
       @media (max-width: 640px) {
         .container {
           padding: 0 12px;
@@ -584,6 +690,7 @@
                   <button
                     class="btn btn-secondary"
                     onclick="clearProjectInfo()"
+                    id="clearProjectBtn"
                   >
                     Clear Project Info
                   </button>
@@ -808,13 +915,31 @@
             <div class="form-section">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                 <h3 style="margin-bottom: 0;">Talent Release Agreement</h3>
-                <button 
-                  class="btn btn-secondary" 
-                  onclick="toggleTermsEditor()"
-                  id="termsEditorToggle"
-                >
-                  Modify Talent Release Agreement
-                </button>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="form-locked-indicator hidden" id="lockedIndicator">FORM LOCKED</span>
+                  <button 
+                    class="btn btn-secondary" 
+                    onclick="toggleTermsEditor()"
+                    id="termsEditorToggle"
+                    style="display: none;"
+                  >
+                    Modify Talent Release Agreement
+                  </button>
+                  <div 
+                    class="lock-button" 
+                    id="lockButton"
+                    onmousedown="startLockHold(event)"
+                    onmouseup="endLockHold()"
+                    onmouseleave="endLockHold()"
+                    ontouchstart="startLockHold(event)"
+                    ontouchend="endLockHold()"
+                    ontouchcancel="endLockHold()"
+                    title="Press and hold for 3 seconds to lock/unlock form"
+                  >
+                    <div class="lock-progress" id="lockProgress"></div>
+                    <span class="lock-icon" id="lockIcon">🔓</span>
+                  </div>
+                </div>
               </div>
 
               <!-- Terms Editor Section (Hidden by default) -->
@@ -1018,6 +1143,7 @@
                   class="btn btn-secondary" 
                   onclick="clearHistoryWithConfirmation()"
                   style="background: var(--danger); color: white;"
+                  id="clearHistoryBtn"
                 >
                   Clear History
                 </button>
@@ -1044,6 +1170,9 @@
       let isDrawing = false;
       let cameraStream = null;
       let currentFacingMode = "user"; // Start with front camera
+      let isFormLocked = false;
+      let lockHoldTimer = null;
+      let lockStartTime = 0;
 
       // Default Terms and Conditions
       const defaultTermsHTML = `<p>I grant permission to the <strong>Client</strong>, the <strong>Photographer</strong>, and their representatives or assigns to:</p>
@@ -1079,6 +1208,9 @@
         // Load persistent fields
         loadPersistentFields();
 
+        // Load form lock state
+        loadFormLockState();
+
         // Initialize signature canvas
         initializeSignatureCanvas();
         initializeWitnessSignatureCanvas();
@@ -1086,6 +1218,7 @@
         // Load custom terms AFTER DOM is ready
         setTimeout(() => {
           loadCustomTerms();
+          updateFormLockState(); // Initialize lock state
         }, 100);
 
         // Force witness signature container to be hidden - run after everything else
@@ -1364,6 +1497,11 @@
       }
 
       function clearProjectInfo() {
+        if (isFormLocked) {
+          alert("Form is locked. Press and hold the lock button for 3 seconds to unlock.");
+          return;
+        }
+
         console.log("Clearing project info directly");
 
         // Clear all form fields
@@ -1451,6 +1589,11 @@
       }
 
       function toggleTermsEditor() {
+        if (isFormLocked) {
+          alert("Form is locked. Press and hold the lock button for 3 seconds to unlock.");
+          return;
+        }
+
         const section = document.getElementById("termsEditorSection");
         const button = document.getElementById("termsEditorToggle");
         const isVisible = !section.classList.contains("hidden");
@@ -2725,8 +2868,108 @@
         generatePDF(submission);
       }
 
-      // Clear History with Confirmation
+      // Form Lock Management
+      function startLockHold(event) {
+        event.preventDefault();
+        
+        lockStartTime = Date.now();
+        const lockButton = document.getElementById("lockButton");
+        const lockProgress = document.getElementById("lockProgress");
+        
+        // Add visual feedback
+        lockButton.classList.add("holding");
+        lockProgress.classList.add("active");
+        
+        // Vibrate if supported (mobile)
+        if (navigator.vibrate) {
+          navigator.vibrate(50);
+        }
+        
+        // Set timer for 3 seconds
+        lockHoldTimer = setTimeout(() => {
+          toggleFormLock();
+          endLockHold();
+        }, 3000);
+      }
+
+      function endLockHold() {
+        if (lockHoldTimer) {
+          clearTimeout(lockHoldTimer);
+          lockHoldTimer = null;
+        }
+        
+        const lockButton = document.getElementById("lockButton");
+        const lockProgress = document.getElementById("lockProgress");
+        
+        // Remove visual feedback
+        lockButton.classList.remove("holding");
+        lockProgress.classList.remove("active");
+        
+        lockStartTime = 0;
+      }
+
+      function toggleFormLock() {
+        isFormLocked = !isFormLocked;
+        
+        // Vibrate on toggle (mobile)
+        if (navigator.vibrate) {
+          navigator.vibrate([100, 50, 100]);
+        }
+        
+        updateFormLockState();
+        
+        // Save lock state
+        localStorage.setItem("formLocked", isFormLocked.toString());
+      }
+
+      function updateFormLockState() {
+        const lockIcon = document.getElementById("lockIcon");
+        const lockButton = document.getElementById("lockButton");
+        const lockedIndicator = document.getElementById("lockedIndicator");
+        const termsEditorToggle = document.getElementById("termsEditorToggle");
+        const clearProjectBtn = document.getElementById("clearProjectBtn");
+        const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+        
+        if (isFormLocked) {
+          // Locked state
+          lockIcon.textContent = "🔒";
+          lockButton.classList.add("locked");
+          lockButton.title = "Press and hold for 3 seconds to unlock form";
+          lockedIndicator.classList.remove("hidden");
+          
+          // Hide admin buttons
+          if (termsEditorToggle) termsEditorToggle.style.display = "none";
+          if (clearProjectBtn) clearProjectBtn.style.display = "none";
+          if (clearHistoryBtn) clearHistoryBtn.style.display = "none";
+          
+        } else {
+          // Unlocked state
+          lockIcon.textContent = "🔓";
+          lockButton.classList.remove("locked");
+          lockButton.title = "Press and hold for 3 seconds to lock form";
+          lockedIndicator.classList.add("hidden");
+          
+          // Show admin buttons
+          if (termsEditorToggle) termsEditorToggle.style.display = "block";
+          if (clearProjectBtn) clearProjectBtn.style.display = "block";
+          if (clearHistoryBtn) clearHistoryBtn.style.display = "block";
+        }
+      }
+
+      // Load lock state from storage
+      function loadFormLockState() {
+        const savedLockState = localStorage.getItem("formLocked");
+        if (savedLockState === "true") {
+          isFormLocked = true;
+        }
+      }
+
       function clearHistoryWithConfirmation() {
+        if (isFormLocked) {
+          alert("Form is locked. Press and hold the lock button for 3 seconds to unlock.");
+          return;
+        }
+
         const submissions = JSON.parse(
           localStorage.getItem("submissions") || "[]"
         );
