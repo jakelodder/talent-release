@@ -6,7 +6,7 @@ A comprehensive web application for capturing digital talent release forms with 
 
 ### Core Functionality
 - **Digital Signature Capture** - Canvas-based drawing with touch and mouse support
-- **Photo Integration** - Camera capture with automatic square cropping
+- **Photo Integration** - Take a photo to easily link the form to the person who signed it [optional]
 - **PDF Generation** - Professional PDF output with embedded signatures and photos
 - **Form Validation** - Real-time validation with user-friendly error messages
 - **100% Offline Operation** - No servers, no data transmission, complete privacy protection
