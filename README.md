@@ -28,10 +28,6 @@ A comprehensive web application for capturing digital talent release forms with 
 - **No Backend Required** - Pure client-side implementation
 - **Cross-Platform** - Works on iOS, Android, Windows, and macOS
 
-## 📱 Screenshots
-
-*Perfect for field work on tablets and mobile devices*
-
 ## 🛠️ Installation
 
 ### Option 1: Direct Use
