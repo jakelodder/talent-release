@@ -1,6 +1,6 @@
 # Digital Talent Release Form
 
-A comprehensive web application for capturing digital talent release forms with signature capture, photo integration, and PDF generation. Perfect for photographers, videographers, and production companies who need legally compliant talent releases in the field.
+A comprehensive web application for capturing digital talent release forms with signature capture, photo integration, and PDF generation. **100% offline operation with no servers - all data stays on your device for maximum privacy and security.** Perfect for photographers, videographers, and production companies who need legally compliant talent releases in the field.
 
 ## 🚀 Features
 
@@ -9,7 +9,8 @@ A comprehensive web application for capturing digital talent release forms with 
 - **Photo Integration** - Camera capture with automatic square cropping
 - **PDF Generation** - Professional PDF output with embedded signatures and photos
 - **Form Validation** - Real-time validation with user-friendly error messages
-- **Offline Capable** - PWA support for use without internet connection
+- **100% Offline Operation** - No servers, no data transmission, complete privacy protection
+- **PWA Support** - Installable on any device for native app experience
 
 ### Advanced Features
 - **Persistent Project Data** - Client and project information saved across sessions
