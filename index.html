@@ -89,7 +89,6 @@
       .nav-buttons {
         display: flex;
         gap: 8px;
-        align-items: center;
       }
 
       .btn {
@@ -1230,6 +1229,7 @@
             container.style.display = "none";
           }
         }, 200);
+
 
       // Validation Functions
       function validateForm() {
@@ -2943,6 +2943,13 @@
           if (clearProjectBtn) clearProjectBtn.style.display = "block";
           if (clearHistoryBtn) clearHistoryBtn.style.display = "block";
         }
+        
+        // Debug logging for mobile
+        console.log("Lock state updated:", {
+          isFormLocked,
+          clearHistoryBtn: clearHistoryBtn ? "found" : "not found",
+          clearHistoryDisplay: clearHistoryBtn ? clearHistoryBtn.style.display : "N/A"
+        });
       }
 
       // Load lock state from storage
