@@ -1218,6 +1218,7 @@
         setTimeout(() => {
           loadCustomTerms();
           updateFormLockState(); // Initialize lock state
+          updateThemeToggle(); // Ensure theme toggle is properly initialized
         }, 100);
 
         // Force witness signature container to be hidden - run after everything else
@@ -1230,6 +1231,16 @@
           }
         }, 200);
 
+        // Register service worker
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker
+            .register(
+              "data:text/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZnVuY3Rpb24oZXZlbnQpIHsKICBjb25zb2xlLmxvZygnU2VydmljZSBXb3JrZXIgaW5zdGFsbGVkJyk7Cn0pOwoKc2VsZi5hZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIGZ1bmN0aW9uKGV2ZW50KSB7CiAgZXZlbnQucmVzcG9uZFdpdGgoY2FjaGVzLm1hdGNoKGV2ZW50LnJlcXVlc3QpKTsKfSk7"
+            )
+            .then((registration) => console.log("SW registered"))
+            .catch((error) => console.log("SW registration failed"));
+        }
+      }
 
       // Validation Functions
       function validateForm() {
