@@ -43,18 +43,6 @@ A comprehensive web application for capturing digital talent release forms with 
 2. Access via browser
 3. Install as PWA for app-like experience
 
-### Option 3: Local Development
-```bash
-# Clone the repository
-git clone [repository-url]
-
-# Open the file directly in browser
-open index.html
-
-# Or serve locally
-python -m http.server 8000
-# Navigate to http://localhost:8000
-```
 
 ## 📋 Usage
 
@@ -91,22 +79,13 @@ This form generates comprehensive talent releases covering:
 ## 🔧 Customization
 
 ### Talent Release Agreement
+0. If Locked: Press and hold lock icon
 1. Click "Modify Talent Release Agreement"
 2. Edit HTML content in the textarea (tip: use [text-html.com](https://text-html.com/) for easy HTML formatting)
 3. Save changes to update both display and PDF output
 4. Restore to default anytime
 5. Historical preservation ensures PDFs always reflect the terms that were signed
-
-### Styling
-The application uses CSS custom properties for easy theming:
-```css
-:root {
-  --primary: #3b82f6;
-  --success: #10b981;
-  --danger: #ef4444;
-  /* ... */
-}
-```
+6. Press and hold lock icon to prevent changes.
 
 ## 🏗️ Technical Architecture
 
@@ -123,55 +102,17 @@ The application uses CSS custom properties for easy theming:
 - Safari 11+
 - Edge 79+
 
-### File Structure
-```
-talent-release-form/
-├── index.html          # Complete single-file application
-├── README.md           # This file
-├── CHANGELOG.md        # Version history
-└── manifest.json       # PWA manifest (embedded)
-```
-
 ## 🔒 Privacy & Security
 
 - **No Data Transmission** - All data stays on the device
 - **Local Storage Only** - No cloud storage or external APIs
 - **No Tracking** - No analytics or third-party scripts
-- **No Location Data** - GPS tracking completely removed
 - **Offline Capable** - Works completely offline after first load
 
-## 📄 License
-
-[MIT License](LICENSE) - Free for commercial and personal use
-
-## 🤝 Contributing
-
-Contributions welcome! Please feel free to submit issues and enhancement requests.
-
-### Development
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly on mobile devices
-5. Submit a pull request
-
-## 🆘 Support
-
-For issues or questions:
-1. Check the [Issues](../../issues) page
-2. Create a new issue with details
-3. Include browser version and device type
-
-## 🎯 Roadmap
-
-- [ ] Multi-language support
-- [ ] Electronic signature validation
-- [ ] Batch processing for multiple talent
-- [ ] QR code generation for forms
-- [ ] Advanced PDF customization
-- [ ] Cloud storage integration (optional)
-
 ## 📈 Changelog
+
+### v1.2.0 (Current)
+- **NEW**: Ability to lock custom talent release agreement (press and hold)
 
 ### v1.1.0 (Current)
 - **NEW**: Customizable talent release agreements with HTML editor
