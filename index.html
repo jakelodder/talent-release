@@ -286,39 +286,6 @@
         margin-bottom: 12px;
       }
 
-      .fullscreen-signature {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: var(--bg-primary);
-        z-index: 1000;
-        display: none;
-        flex-direction: column;
-      }
-
-      .fullscreen-header {
-        padding: 16px;
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .fullscreen-canvas {
-        flex: 1;
-        background: white;
-        cursor: crosshair;
-      }
-
-      .fullscreen-controls {
-        padding: 16px;
-        border-top: 1px solid var(--border);
-        display: flex;
-        gap: 8px;
-      }
-
       .theme-toggle {
         position: relative;
         display: inline-block;
@@ -836,37 +803,37 @@
 
             <div class="form-section">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 style="margin-bottom: 0;">Terms and Conditions</h3>
+                <h3 style="margin-bottom: 0;">Talent Release Agreement</h3>
                 <button 
                   class="btn btn-secondary" 
                   onclick="toggleTermsEditor()"
                   id="termsEditorToggle"
                 >
-                  Modify Terms & Conditions
+                  Modify Talent Release Agreement
                 </button>
               </div>
 
               <!-- Terms Editor Section (Hidden by default) -->
               <div id="termsEditorSection" class="hidden" style="margin-bottom: 20px;">
                 <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-                  <h4 style="margin-bottom: 12px; color: var(--primary);">Custom Terms & Conditions Editor</h4>
+                  <h4 style="margin-bottom: 12px; color: var(--primary);">Custom Talent Release Agreement Editor</h4>
                   <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">
-                    Paste your custom terms and conditions below. You can use HTML formatting (p, strong, em, ol, ul, li tags).
+                    Paste your custom talent release agreement below. You can use HTML formatting (p, strong, em, ol, ul, li tags).
                   </p>
                   
                   <div class="form-group">
-                    <label for="termsEditor">Terms & Conditions HTML:</label>
+                    <label for="termsEditor">Talent Release Agreement HTML:</label>
                     <textarea 
                       id="termsEditor" 
                       rows="10" 
                       style="font-family: monospace; font-size: 13px;"
-                      placeholder="Paste your HTML formatted terms and conditions here..."
+                      placeholder="Paste your HTML formatted talent release agreement here..."
                     ></textarea>
                   </div>
 
                   <div style="display: flex; gap: 8px;">
                     <button class="btn btn-primary" onclick="saveCustomTerms()">
-                      Save Custom Terms
+                      Save Custom Agreement
                     </button>
                     <button class="btn btn-secondary" onclick="restoreDefaultTerms()">
                       Restore to Default
@@ -1064,55 +1031,21 @@
       let cameraStream = null;
 
       // Default Terms and Conditions
-      const defaultTermsHTML = `<p><strong>TALENT RELEASE AGREEMENT</strong></p>
-                <p>
-                  I grant permission to the <strong>Client</strong>, the
-                  <strong>Photographer</strong>, and their representatives or
-                  assigns to:
-                </p>
-                <ol>
-                  <li>
-                    Create images or recordings of me (including video, audio,
-                    and still photography);
-                  </li>
-                  <li>
-                    Use, reproduce, modify, and publish those materials in whole
-                    or in part, in any form and media, including print, digital,
-                    social media, advertising, and promotional content;
-                  </li>
-                  <li>
-                    Store and retain the materials in any format (physical or
-                    digital);
-                  </li>
-                  <li>
-                    Use my name and identifying details solely to associate me
-                    with this release and the materials covered by it.
-                  </li>
-                </ol>
-
-                <p>I understand and agree that:</p>
-                <ul>
-                  <li>
-                    These rights are granted in perpetuity, worldwide, and
-                    without restriction;
-                  </li>
-                  <li>
-                    I will not receive payment, royalties, or other compensation
-                    for the use of the materials;
-                  </li>
-                  <li>
-                    Any content referring to me will be produced in good faith
-                    and not intended to defame or misrepresent;
-                  </li>
-                  <li>
-                    Copyright and ownership of the materials belong to the
-                    Photographer and/or Client;
-                  </li>
-                  <li>
-                    I have read and understand this release, and I give my
-                    consent voluntarily.
-                  </li>
-                </ul>`;
+      const defaultTermsHTML = `<p>I grant permission to the <strong>Client</strong>, the <strong>Photographer</strong>, and their representatives or assigns to:</p>
+<ol>
+<li>Create images or recordings of me (including video, audio, and still photography);</li>
+<li>Use, reproduce, modify, and publish those materials in whole or in part, in any form and media, including print, digital, social media, advertising, and promotional content;</li>
+<li>Store and retain the materials in any format (physical or digital);</li>
+<li>Use my name and identifying details solely to associate me with this release and the materials covered by it.</li>
+</ol>
+<p>I understand and agree that:</p>
+<ul>
+<li>These rights are granted in perpetuity, worldwide, and without restriction;</li>
+<li>I will not receive payment, royalties, or other compensation for the use of the materials;</li>
+<li>Any content referring to me will be produced in good faith and not intended to defame or misrepresent;</li>
+<li>Copyright and ownership of the materials belong to the Photographer and/or Client;</li>
+<li>I have read and understand this release, and I give my consent voluntarily.</li>
+</ul>`;
 
       // Current terms - loaded from storage or default
       let currentTermsHTML = defaultTermsHTML;
@@ -1147,7 +1080,6 @@
           );
           if (container) {
             container.style.display = "none";
-            console.log("Forced witness container to display: none");
           }
         }, 200);
 
@@ -1198,7 +1130,7 @@
         // Required checkboxes
         const agreeTerms = document.getElementById("agreeTerms").checked;
         if (!agreeTerms) {
-          errors.push("You must agree to the terms and conditions");
+          errors.push("You must agree to the talent release agreement");
           addCheckboxError("agreeTerms");
         }
 
@@ -1465,26 +1397,41 @@
 
       // Terms and Conditions Management
       function loadCustomTerms() {
-        console.log("Loading custom terms...");
         const savedTerms = localStorage.getItem("customTermsHTML");
-        if (savedTerms) {
-          console.log("Found saved terms in localStorage");
+        if (savedTerms && 
+            !savedTerms.includes('<meta charset') && 
+            !savedTerms.includes('<title>') &&
+            !savedTerms.includes('<!DOCTYPE') &&
+            savedTerms.length < 10000) {
           currentTermsHTML = savedTerms;
         } else {
-          console.log("No saved terms, using default");
+          // Clear corrupted data and use default
+          if (savedTerms) {
+            console.warn("Corrupted custom terms detected, clearing localStorage");
+            localStorage.removeItem("customTermsHTML");
+          }
           currentTermsHTML = defaultTermsHTML;
         }
         updateTermsDisplay();
       }
 
       function updateTermsDisplay() {
-        console.log("Updating terms display...");
         const container = document.getElementById("termsContainer");
         if (container) {
-          container.innerHTML = currentTermsHTML;
-          console.log("Terms display updated successfully");
-        } else {
-          console.log("Terms container not found!");
+          // Emergency fix: validate that currentTermsHTML is actually terms content
+          if (currentTermsHTML && 
+              !currentTermsHTML.includes('<meta charset') && 
+              !currentTermsHTML.includes('<title>') &&
+              !currentTermsHTML.includes('<!DOCTYPE') &&
+              currentTermsHTML.length < 10000) {
+            container.innerHTML = currentTermsHTML;
+          } else {
+            // Corrupted data detected - reset to default
+            console.warn("Corrupted terms detected, resetting to default");
+            currentTermsHTML = defaultTermsHTML;
+            localStorage.removeItem("customTermsHTML");
+            container.innerHTML = defaultTermsHTML;
+          }
         }
       }
 
@@ -1496,11 +1443,11 @@
         if (isVisible) {
           // Hide editor
           section.classList.add("hidden");
-          button.textContent = "Modify Terms & Conditions";
+          button.textContent = "Modify Talent Release Agreement";
         } else {
           // Show editor and populate with current terms
           section.classList.remove("hidden");
-          button.textContent = "Hide Terms Editor";
+          button.textContent = "Hide Agreement Editor";
           document.getElementById("termsEditor").value = currentTermsHTML;
         }
       }
@@ -1509,7 +1456,7 @@
         const editorContent = document.getElementById("termsEditor").value.trim();
         
         if (!editorContent) {
-          alert("Please enter some terms and conditions before saving.");
+          alert("Please enter some talent release agreement content before saving.");
           return;
         }
 
@@ -1530,7 +1477,7 @@
           // Hide editor
           toggleTermsEditor();
           
-          alert("Custom terms and conditions have been saved successfully!");
+          alert("Custom talent release agreement has been saved successfully!");
           
         } catch (error) {
           alert("Invalid HTML content. Please check your formatting and try again.");
@@ -1539,8 +1486,8 @@
 
       function restoreDefaultTerms() {
         const confirmed = confirm(
-          "Are you sure you want to restore the default terms and conditions?\n\n" +
-          "This will overwrite your custom terms and cannot be undone."
+          "Are you sure you want to restore the default talent release agreement?\n\n" +
+          "This will overwrite your custom agreement and cannot be undone."
         );
 
         if (confirmed) {
@@ -1559,7 +1506,7 @@
             editorTextarea.value = currentTermsHTML;
           }
           
-          alert("Terms and conditions have been restored to default.");
+          alert("Talent release agreement has been restored to default.");
         }
       }
 
@@ -1569,43 +1516,144 @@
         const button = document.getElementById("termsEditorToggle");
         
         section.classList.add("hidden");
-        button.textContent = "Modify Terms & Conditions";
+        button.textContent = "Modify Talent Release Agreement";
         
         // Reset editor content to current terms
         document.getElementById("termsEditor").value = currentTermsHTML;
       }
 
-      // Convert HTML terms to plain text for PDF
-      function getTermsForPDF() {
-        // Create a temporary div to parse HTML and extract text
+      // Convert HTML terms to formatted PDF content
+      function addFormattedTermsToPDF(doc, html, startX, startY, maxWidth) {
+        let currentY = startY;
+        const lineHeight = 3;
+        
+        // Simple approach: convert HTML to plain text but preserve structure
         const tempDiv = document.createElement("div");
-        tempDiv.innerHTML = currentTermsHTML;
+        tempDiv.innerHTML = html;
         
-        // Convert to text while preserving some structure
-        let text = tempDiv.textContent || tempDiv.innerText || "";
-        
-        // Clean up extra whitespace
-        text = text.replace(/\s+/g, " ").trim();
-        
-        // If the conversion results in very short text, use a fallback
-        if (text.length < 50) {
-          text = `TALENT RELEASE AGREEMENT
-
-I grant permission to the Client, the Photographer, and their representatives or assigns to:
-1. Create images or recordings of me (including video, audio, and still photography);
-2. Use, reproduce, modify, and publish those materials in whole or in part, in any form and media, including print, digital, social media, advertising, and promotional content;
-3. Store and retain the materials in any format (physical or digital);
-4. Use my name and identifying details solely to associate me with this release and the materials covered by it.
-
-I understand and agree that:
-• These rights are granted in perpetuity, worldwide, and without restriction;
-• I will not receive payment, royalties, or other compensation for the use of the materials;
-• Any content referring to me will be produced in good faith and not intended to defame or misrepresent;
-• Copyright and ownership of the materials belong to the Photographer and/or Client;
-• I have read and understand this release, and I give my consent voluntarily.`;
+        // Process each top-level element
+        function processElement(element) {
+          if (element.nodeType === Node.TEXT_NODE) {
+            const text = element.textContent.trim();
+            if (text) {
+              doc.setFont(undefined, "normal");
+              const lines = doc.splitTextToSize(text, maxWidth);
+              lines.forEach(line => {
+                if (line.trim()) {
+                  doc.text(line.trim(), startX, currentY);
+                  currentY += lineHeight;
+                }
+              });
+            }
+            return;
+          }
+          
+          if (element.nodeType !== Node.ELEMENT_NODE) return;
+          
+          const tagName = element.tagName.toLowerCase();
+          
+          switch (tagName) {
+            case 'p':
+              const pText = element.textContent.trim();
+              if (pText) {
+                doc.setFont(undefined, "normal");
+                const lines = doc.splitTextToSize(pText, maxWidth);
+                lines.forEach(line => {
+                  if (line.trim()) {
+                    doc.text(line.trim(), startX, currentY);
+                    currentY += lineHeight;
+                  }
+                });
+              }
+              // No extra spacing after paragraph
+              break;
+              
+            case 'ol':
+              currentY += lineHeight; // Small spacing before list
+              let counter = 1;
+              Array.from(element.children).forEach(li => {
+                if (li.tagName.toLowerCase() === 'li') {
+                  const liText = li.textContent.trim();
+                  if (liText) {
+                    // Add number
+                    doc.setFont(undefined, "normal");
+                    doc.text(`${counter}. `, startX, currentY);
+                    
+                    // Add list item text with proper indentation
+                    const listStartX = startX + 12;
+                    const listMaxWidth = maxWidth - 12;
+                    const lines = doc.splitTextToSize(liText, listMaxWidth);
+                    
+                    lines.forEach((line, index) => {
+                      if (line.trim()) {
+                        const xPos = index === 0 ? listStartX : startX + 12;
+                        doc.text(line.trim(), xPos, currentY);
+                        if (index < lines.length - 1) {
+                          currentY += lineHeight;
+                        }
+                      }
+                    });
+                    currentY += lineHeight + 0.5; // Smaller spacing between list items
+                    counter++;
+                  }
+                }
+              });
+              currentY += lineHeight * 0.5; // Smaller spacing after list
+              break;
+              
+            case 'ul':
+              currentY += lineHeight; // Small spacing before list
+              Array.from(element.children).forEach(li => {
+                if (li.tagName.toLowerCase() === 'li') {
+                  const liText = li.textContent.trim();
+                  if (liText) {
+                    // Add bullet
+                    doc.setFont(undefined, "normal");
+                    doc.text('• ', startX, currentY);
+                    
+                    // Add list item text with proper indentation
+                    const listStartX = startX + 10;
+                    const listMaxWidth = maxWidth - 10;
+                    const lines = doc.splitTextToSize(liText, listMaxWidth);
+                    
+                    lines.forEach((line, index) => {
+                      if (line.trim()) {
+                        const xPos = index === 0 ? listStartX : startX + 10;
+                        doc.text(line.trim(), xPos, currentY);
+                        if (index < lines.length - 1) {
+                          currentY += lineHeight;
+                        }
+                      }
+                    });
+                    currentY += lineHeight + 0.5; // Smaller spacing between list items
+                  }
+                }
+              });
+              currentY += lineHeight * 0.5; // Smaller spacing after list
+              break;
+              
+            default:
+              // For other elements, just get the text content
+              const text = element.textContent.trim();
+              if (text) {
+                doc.setFont(undefined, "normal");
+                const lines = doc.splitTextToSize(text, maxWidth);
+                lines.forEach(line => {
+                  if (line.trim()) {
+                    doc.text(line.trim(), startX, currentY);
+                    currentY += lineHeight;
+                  }
+                });
+                currentY += lineHeight;
+              }
+              break;
+          }
         }
         
-        return text;
+        // Start processing
+        tempDiv.childNodes.forEach(child => processElement(child));
+        
+        return currentY;
       }
 
       // Signature Canvas Management
@@ -2112,6 +2160,9 @@ I understand and agree that:
             witnessSignature: currentWitnessSignature,
             photo: currentPhoto,
 
+            // Capture terms at time of submission
+            termsHTML: currentTermsHTML,
+
             // Metadata
             userAgent: navigator.userAgent,
             status: "completed",
@@ -2202,7 +2253,7 @@ I understand and agree that:
         doc.setFontSize(10);
         doc.setFont(undefined, "bold");
         doc.text("PROJECT INFORMATION", margin, yPos);
-        yPos += 5;
+        yPos += 3; // Reduced spacing after heading
 
         // Create 4-column project info table
         doc.setFont(undefined, "normal");
@@ -2260,7 +2311,7 @@ I understand and agree that:
         doc.setFontSize(10);
         doc.setFont(undefined, "bold");
         doc.text("TALENT INFORMATION", margin, yPos);
-        yPos += 5;
+        yPos += 3; // Reduced spacing after heading
 
         // Calculate layout for talent info + photo
         const photoBoxWidth = 50;
@@ -2368,7 +2419,7 @@ I understand and agree that:
           doc.setFontSize(10);
           doc.setFont(undefined, "bold");
           doc.text("DEPENDANTS", margin, yPos);
-          yPos += 5;
+          yPos += 3; // Reduced spacing after heading
 
           doc.setFont(undefined, "normal");
           doc.setFontSize(9);
@@ -2402,25 +2453,22 @@ I understand and agree that:
         // Use the lower of the two positions to ensure no overlap
         yPos = Math.max(talentSectionEndY, photoBoxEndY + 8);
 
-        // Terms and Conditions Box
+        // Talent Release Agreement Section
         doc.setFontSize(10);
         doc.setFont(undefined, "bold");
-        doc.text("TERMS AND CONDITIONS", margin, yPos);
-        yPos += 5;
+        doc.text("TALENT RELEASE AGREEMENT", margin, yPos);
+        yPos += 4; // Reduced spacing after heading
 
-        // Draw box for terms - increased height
-        const termsBoxHeight = 60;
-        doc.rect(margin, yPos, contentWidth, termsBoxHeight);
-
-        // Add terms text
-        doc.setFontSize(8);
+        // Add terms text with smaller font for long content
+        doc.setFontSize(6); // Even smaller font size to fit more content
         doc.setFont(undefined, "normal");
-        const termsText = getTermsForPDF();
-
-        const splitTerms = doc.splitTextToSize(termsText, contentWidth - 4);
-        doc.text(splitTerms, margin + 2, yPos + 4);
-
-        yPos += termsBoxHeight + 10;
+        
+        // Use terms from form data (historical) or current terms
+        const termsHTML = formData.termsHTML || currentTermsHTML || defaultTermsHTML;
+        yPos = addFormattedTermsToPDF(doc, termsHTML, margin + 2, yPos, contentWidth - 4);
+        
+        // Add some spacing after terms
+        yPos += 8;
 
         // Signatures section (2 columns)
         const colWidth = (contentWidth - 10) / 2;
@@ -2434,7 +2482,7 @@ I understand and agree that:
 
         // Witness Signature (Right Column)
         doc.text("WITNESS SIGNATURE", rightColX, yPos);
-        yPos += 5;
+        yPos += 3; // Reduced spacing after headings
 
         // Signature boxes
         const sigBoxHeight = 25;
@@ -2500,7 +2548,7 @@ I understand and agree that:
 
         // Privacy Notice (small font at bottom)
         if (yPos < pageHeight - 30) {
-          doc.setFontSize(7);
+          doc.setFontSize(6); // Smaller privacy notice font
           doc.setFont(undefined, "italic");
           const privacyText = `PRIVACY NOTICE: We are collecting your information (and any children, if applicable) on behalf of the client for purposes as described above. This information will only be accessed by authorized personnel involved in the project. Some information may be shared with third parties for the purpose of using and managing these images and recordings. Your information will not be disclosed to any other parties unless you have provided consent or we are required or permitted to do so by law.`;
           const splitPrivacy = doc.splitTextToSize(privacyText, contentWidth);
