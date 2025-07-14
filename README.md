@@ -15,7 +15,7 @@ A comprehensive web application for capturing digital talent release forms with 
 - **Persistent Project Data** - Client and project information saved across sessions
 - **Witness Signatures** - Optional witness signature capture and storage
 - **Children/Dependants Support** - Guardian consent forms for minors
-- **Customizable Terms** - HTML-editable terms and conditions with live preview
+- **Customizable Talent Release Agreement** - HTML-editable terms with live preview and historical preservation
 - **Form History** - Local storage of all submissions with PDF re-generation
 - **Dark/Light Theme** - User preference theming with automatic persistence
 
@@ -42,6 +42,19 @@ A comprehensive web application for capturing digital talent release forms with 
 2. Access via browser
 3. Install as PWA for app-like experience
 
+### Option 3: Local Development
+```bash
+# Clone the repository
+git clone [repository-url]
+
+# Open the file directly in browser
+open index.html
+
+# Or serve locally
+python -m http.server 8000
+# Navigate to http://localhost:8000
+```
+
 ## 📋 Usage
 
 ### Quick Start
@@ -54,12 +67,12 @@ A comprehensive web application for capturing digital talent release forms with 
 ### Persistent Data
 - Client and project information persists across sessions
 - Witness signatures are saved and reused
-- Custom terms and conditions are preserved
+- Custom talent release agreements are preserved
 - Theme preferences remembered
 
 ### Form History
 - All submissions stored locally - no cloud usage for privacy security
-- Re-download PDFs anytime
+- Re-download PDFs anytime with original terms preserved
 - Clear history with confirmation
 - Export data for backup
 
@@ -76,12 +89,23 @@ This form generates comprehensive talent releases covering:
 
 ## 🔧 Customization
 
-### Terms and Conditions
-1. Click "Modify Terms & Conditions"
-2. Edit HTML content in the textarea
+### Talent Release Agreement
+1. Click "Modify Talent Release Agreement"
+2. Edit HTML content in the textarea (tip: use [text-html.com](https://text-html.com/) for easy HTML formatting)
 3. Save changes to update both display and PDF output
 4. Restore to default anytime
+5. Historical preservation ensures PDFs always reflect the terms that were signed
 
+### Styling
+The application uses CSS custom properties for easy theming:
+```css
+:root {
+  --primary: #3b82f6;
+  --success: #10b981;
+  --danger: #ef4444;
+  /* ... */
+}
+```
 
 ## 🏗️ Technical Architecture
 
@@ -92,13 +116,80 @@ This form generates comprehensive talent releases covering:
 - **Local Storage** - Data persistence
 - **Service Worker** - PWA functionality
 
+### Browser Support
+- Chrome/Chromium 60+
+- Firefox 55+
+- Safari 11+
+- Edge 79+
+
+### File Structure
+```
+talent-release-form/
+├── index.html          # Complete single-file application
+├── README.md           # This file
+├── CHANGELOG.md        # Version history
+└── manifest.json       # PWA manifest (embedded)
+```
+
 ## 🔒 Privacy & Security
 
 - **No Data Transmission** - All data stays on the device
 - **Local Storage Only** - No cloud storage or external APIs
 - **No Tracking** - No analytics or third-party scripts
+- **No Location Data** - GPS tracking completely removed
 - **Offline Capable** - Works completely offline after first load
 
+## 📄 License
+
+[MIT License](LICENSE) - Free for commercial and personal use
+
+## 🤝 Contributing
+
+Contributions welcome! Please feel free to submit issues and enhancement requests.
+
+### Development
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly on mobile devices
+5. Submit a pull request
+
+## 🆘 Support
+
+For issues or questions:
+1. Check the [Issues](../../issues) page
+2. Create a new issue with details
+3. Include browser version and device type
+
+## 🎯 Roadmap
+
+- [ ] Multi-language support
+- [ ] Electronic signature validation
+- [ ] Batch processing for multiple talent
+- [ ] QR code generation for forms
+- [ ] Advanced PDF customization
+- [ ] Cloud storage integration (optional)
+
+## 📈 Changelog
+
+### v1.1.0 (Current)
+- **NEW**: Customizable talent release agreements with HTML editor
+- **NEW**: Historical terms preservation in PDFs
+- **NEW**: Form history management with clear functionality
+- **IMPROVED**: PDF layout optimization and content density
+- **FIXED**: Removed location tracking for better privacy
+- **FIXED**: Signature overlap issues in PDF generation
+- **ENHANCED**: Better error handling and data corruption protection
+
+### v1.0.0 (Initial Release)
+- Complete talent release functionality
+- Digital signature capture (talent + witness)
+- Photo capture with camera integration
+- PDF generation with professional layout
+- Form history with local storage
+- PWA support with dark/light themes
+
+*See [CHANGELOG.md](CHANGELOG.md) for complete version history*
 
 ## 🙏 Acknowledgments
 
@@ -106,7 +197,9 @@ This form generates comprehensive talent releases covering:
 
 Special thanks to:
 - The open-source community for the underlying technologies
-  
+- Photographers and videographers who provided feedback during development
+- Legal professionals who reviewed the default terms and conditions
+
 ---
 
 *Built with ❤️ for the creative community*
