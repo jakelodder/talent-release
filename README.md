@@ -14,9 +14,10 @@ A comprehensive web application for capturing digital talent release forms with 
 
 ### Advanced Features
 - **Persistent Project Data** - Client and project information saved across sessions
-- **Witness Signatures** - Optional witness signature capture and storage
+- **Witness Signatures** - Persistant witness signature
 - **Children/Dependants Support** - Guardian consent forms for minors
 - **Customizable Talent Release Agreement** - HTML-editable terms with live preview and historical preservation
+- **Lock Mode** - Hide abilty to modify agreement and delete history (press and hold lock for 3sec)
 - **Form History** - Local storage of all submissions with PDF re-generation
 - **Dark/Light Theme** - User preference theming with automatic persistence
 
@@ -79,13 +80,13 @@ This form generates comprehensive talent releases covering:
 ## 🔧 Customization
 
 ### Talent Release Agreement
-0. If Locked: Press and hold lock icon
+0. If Locked: Press and hold lock icon at top of screen
 1. Click "Modify Talent Release Agreement"
-2. Edit HTML content in the textarea (tip: use [text-html.com](https://text-html.com/) for easy HTML formatting)
-3. Save changes to update both display and PDF output
-4. Restore to default anytime
-5. Historical preservation ensures PDFs always reflect the terms that were signed
-6. Press and hold lock icon to prevent changes.
+3. Edit HTML content in the textarea (tip: use [text-html.com](https://text-html.com/) for easy HTML formatting)
+4. Save changes to update both display and PDF output
+5. Restore to default anytime
+6. Historical preservation ensures PDFs always reflect the terms that were signed
+7. Press and hold lock icon at top of screen to prevent changes.
 
 ## 🏗️ Technical Architecture
 
