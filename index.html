@@ -276,6 +276,10 @@
         margin-bottom: 12px;
       }
 
+      .camera-preview.front-camera {
+        transform: scaleX(-1); /* Mirror front camera preview */
+      }
+
       .photo-preview {
         width: 100%;
         max-width: 300px;
@@ -819,6 +823,7 @@
                   <h4 style="margin-bottom: 12px; color: var(--primary);">Custom Talent Release Agreement Editor</h4>
                   <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">
                     Paste your custom talent release agreement below. You can use HTML formatting (p, strong, em, ol, ul, li tags).
+                    <br>
                     <strong>Tip:</strong> Use <a href="https://text-html.com/" target="_blank" style="color: var(--primary); text-decoration: none;">text-html.com</a> for easy text-to-HTML conversion.
                   </p>
                   
@@ -940,6 +945,14 @@
                   <button
                     type="button"
                     class="btn btn-secondary hidden"
+                    onclick="switchCamera()"
+                    id="switchCameraBtn"
+                  >
+                    Switch Camera
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary hidden"
                     onclick="retakePhoto()"
                   >
                     Retake
@@ -1030,6 +1043,7 @@
       let currentPhoto = null;
       let isDrawing = false;
       let cameraStream = null;
+      let currentFacingMode = "user"; // Start with front camera
 
       // Default Terms and Conditions
       const defaultTermsHTML = `<p>I grant permission to the <strong>Client</strong>, the <strong>Photographer</strong>, and their representatives or assigns to:</p>
@@ -1978,12 +1992,11 @@
         }
       }
 
-      // Camera Management
       async function startCamera() {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
             video: {
-              facingMode: "environment",
+              facingMode: currentFacingMode, // Use current facing mode (default: front)
               width: { ideal: 1280 },
               height: { ideal: 720 },
             },
@@ -1994,6 +2007,13 @@
           video.srcObject = stream;
           video.classList.remove("hidden");
 
+          // Add front camera class for CSS mirroring during preview
+          if (currentFacingMode === "user") {
+            video.classList.add("front-camera");
+          } else {
+            video.classList.remove("front-camera");
+          }
+
           // Update buttons
           document
             .querySelector('button[onclick="startCamera()"]')
@@ -2002,11 +2022,57 @@
             .querySelector('button[onclick="capturePhoto()"]')
             .classList.remove("hidden");
           document
+            .querySelector('button[onclick="switchCamera()"]')
+            .classList.remove("hidden");
+          document
             .querySelector('button[onclick="retakePhoto()"]')
             .classList.remove("hidden");
         } catch (error) {
           console.error("Error accessing camera:", error);
           alert("Unable to access camera. Please check permissions.");
+        }
+      }
+
+      async function switchCamera() {
+        try {
+          // Stop current stream
+          if (cameraStream) {
+            cameraStream.getTracks().forEach((track) => track.stop());
+          }
+
+          // Toggle facing mode
+          currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+
+          // Start camera with new facing mode
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: currentFacingMode,
+              width: { ideal: 1280 },
+              height: { ideal: 720 },
+            },
+          });
+
+          cameraStream = stream;
+          const video = document.getElementById("cameraPreview");
+          video.srcObject = stream;
+
+          // Update front camera class for CSS mirroring
+          if (currentFacingMode === "user") {
+            video.classList.add("front-camera");
+          } else {
+            video.classList.remove("front-camera");
+          }
+
+          // Keep button text consistent
+          const switchBtn = document.getElementById("switchCameraBtn");
+          switchBtn.textContent = "Switch Camera";
+
+        } catch (error) {
+          console.error("Error switching camera:", error);
+          alert("Unable to switch camera. This device may only have one camera.");
+          
+          // Revert facing mode if switch failed
+          currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
         }
       }
 
@@ -2035,7 +2101,7 @@
         const cropX = (videoWidth - minDimension) / 2;
         const cropY = (videoHeight - minDimension) / 2;
 
-        // Draw center-cropped square from video to square canvas
+        // Draw the image normally - CSS handles preview mirroring only
         ctx.drawImage(
           video,
           cropX,
@@ -2066,6 +2132,9 @@
         document
           .querySelector('button[onclick="capturePhoto()"]')
           .classList.add("hidden");
+        document
+          .querySelector('button[onclick="switchCamera()"]')
+          .classList.add("hidden");
         document.querySelector('button[onclick="startCamera()"]').textContent =
           "Photo Captured";
         document
@@ -2087,8 +2156,15 @@
           .querySelector('button[onclick="capturePhoto()"]')
           .classList.add("hidden");
         document
+          .querySelector('button[onclick="switchCamera()"]')
+          .classList.add("hidden");
+        document
           .querySelector('button[onclick="retakePhoto()"]')
           .classList.add("hidden");
+
+        // Reset switch camera button text
+        const switchBtn = document.getElementById("switchCameraBtn");
+        switchBtn.textContent = "Switch Camera";
 
         // Stop camera if running
         if (cameraStream) {
