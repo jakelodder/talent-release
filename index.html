@@ -4,10 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Talent Release Forms</title>
-    <link
-      rel="manifest"
-      href="data:application/json;base64,eyJuYW1lIjoiVGFsZW50IFJlbGVhc2UgRm9ybXMiLCJzaG9ydF9uYW1lIjoiVGFsZW50UmVsZWFzZSIsImRlc2NyaXB0aW9uIjoiRGlnaXRhbCB0YWxlbnQgcmVsZWFzZSBmb3JtIGNhcHR1cmUgYXBwIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMxZTI5M2IiLCJ0aGVtZV9jb2xvciI6IiMzYjgyZjYiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTWpRaUlHaGxhV2RvZEQwaU1qUWlJSFpwWlhkQ2IzZzlJakFnTUNBeU5DQXlOQ0lnWm1sc2JEMGlJek0yT0RKbU5pSStQSEpsWTNRZ2VEMGlOaUlnZVQwaU5pSWdkMmxrZEdnOUlqRXlJaUJvWldsbmFIUTlJakV5SWlCeWVEMGlNaUlnWm1sc2JEMGlJek0yT0RKbU5pSXZQand2YzNablBnPT0iLCJzaXplcyI6IjI0eDI0IiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19"
-    />
+    <link rel="canonical" href="https://jakelodder.github.io/talent-release/" />
+    <link rel="manifest" href="/talent-release/manifest.webmanifest">
     <meta name="theme-color" content="#3b82f6" />
     <style>
       :root {
@@ -835,10 +833,17 @@
             </div>
 
             <div class="form-section">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 style="margin-bottom: 0;">Terms and Conditions</h3>
-                <button 
-                  class="btn btn-secondary" 
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 16px;
+                "
+              >
+                <h3 style="margin-bottom: 0">Terms and Conditions</h3>
+                <button
+                  class="btn btn-secondary"
                   onclick="toggleTermsEditor()"
                   id="termsEditorToggle"
                 >
@@ -847,31 +852,57 @@
               </div>
 
               <!-- Terms Editor Section (Hidden by default) -->
-              <div id="termsEditorSection" class="hidden" style="margin-bottom: 20px;">
-                <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-                  <h4 style="margin-bottom: 12px; color: var(--primary);">Custom Terms & Conditions Editor</h4>
-                  <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">
-                    Paste your custom terms and conditions below. You can use HTML formatting (p, strong, em, ol, ul, li tags).
+              <div
+                id="termsEditorSection"
+                class="hidden"
+                style="margin-bottom: 20px"
+              >
+                <div
+                  style="
+                    background: var(--bg-tertiary);
+                    padding: 16px;
+                    border-radius: 8px;
+                    margin-bottom: 16px;
+                  "
+                >
+                  <h4 style="margin-bottom: 12px; color: var(--primary)">
+                    Custom Terms & Conditions Editor
+                  </h4>
+                  <p
+                    style="
+                      font-size: 14px;
+                      color: var(--text-secondary);
+                      margin-bottom: 16px;
+                    "
+                  >
+                    Paste your custom terms and conditions below. You can use
+                    HTML formatting (p, strong, em, ol, ul, li tags).
                   </p>
-                  
+
                   <div class="form-group">
                     <label for="termsEditor">Terms & Conditions HTML:</label>
-                    <textarea 
-                      id="termsEditor" 
-                      rows="10" 
-                      style="font-family: monospace; font-size: 13px;"
+                    <textarea
+                      id="termsEditor"
+                      rows="10"
+                      style="font-family: monospace; font-size: 13px"
                       placeholder="Paste your HTML formatted terms and conditions here..."
                     ></textarea>
                   </div>
 
-                  <div style="display: flex; gap: 8px;">
+                  <div style="display: flex; gap: 8px">
                     <button class="btn btn-primary" onclick="saveCustomTerms()">
                       Save Custom Terms
                     </button>
-                    <button class="btn btn-secondary" onclick="restoreDefaultTerms()">
+                    <button
+                      class="btn btn-secondary"
+                      onclick="restoreDefaultTerms()"
+                    >
                       Restore to Default
                     </button>
-                    <button class="btn btn-secondary" onclick="cancelTermsEdit()">
+                    <button
+                      class="btn btn-secondary"
+                      onclick="cancelTermsEdit()"
+                    >
                       Cancel
                     </button>
                   </div>
@@ -1032,11 +1063,11 @@
               "
             >
               <h2>Form History</h2>
-              <div style="display: flex; gap: 8px;">
-                <button 
-                  class="btn btn-secondary" 
+              <div style="display: flex; gap: 8px">
+                <button
+                  class="btn btn-secondary"
                   onclick="clearHistoryWithConfirmation()"
-                  style="background: var(--danger); color: white;"
+                  style="background: var(--danger); color: white"
                 >
                   Clear History
                 </button>
@@ -1060,7 +1091,6 @@
       let currentSignature = null;
       let currentWitnessSignature = null;
       let currentPhoto = null;
-      let currentLocation = null;
       let isDrawing = false;
       let cameraStream = null;
 
@@ -1151,9 +1181,6 @@
             console.log("Forced witness container to display: none");
           }
         }, 200);
-
-        // Request location permission
-        requestLocation();
 
         // Register service worker
         if ("serviceWorker" in navigator) {
@@ -1510,8 +1537,10 @@
       }
 
       function saveCustomTerms() {
-        const editorContent = document.getElementById("termsEditor").value.trim();
-        
+        const editorContent = document
+          .getElementById("termsEditor")
+          .value.trim();
+
         if (!editorContent) {
           alert("Please enter some terms and conditions before saving.");
           return;
@@ -1521,48 +1550,49 @@
         const tempDiv = document.createElement("div");
         try {
           tempDiv.innerHTML = editorContent;
-          
+
           // Update current terms
           currentTermsHTML = editorContent;
-          
+
           // Save to localStorage
           localStorage.setItem("customTermsHTML", currentTermsHTML);
-          
+
           // Update display
           updateTermsDisplay();
-          
+
           // Hide editor
           toggleTermsEditor();
-          
+
           alert("Custom terms and conditions have been saved successfully!");
-          
         } catch (error) {
-          alert("Invalid HTML content. Please check your formatting and try again.");
+          alert(
+            "Invalid HTML content. Please check your formatting and try again."
+          );
         }
       }
 
       function restoreDefaultTerms() {
         const confirmed = confirm(
           "Are you sure you want to restore the default terms and conditions?\n\n" +
-          "This will overwrite your custom terms and cannot be undone."
+            "This will overwrite your custom terms and cannot be undone."
         );
 
         if (confirmed) {
           // Restore default terms
           currentTermsHTML = defaultTermsHTML;
-          
+
           // Remove custom terms from storage
           localStorage.removeItem("customTermsHTML");
-          
+
           // Update display
           updateTermsDisplay();
-          
+
           // Update editor content if editor is visible
           const editorTextarea = document.getElementById("termsEditor");
           if (editorTextarea) {
             editorTextarea.value = currentTermsHTML;
           }
-          
+
           alert("Terms and conditions have been restored to default.");
         }
       }
@@ -1571,10 +1601,10 @@
         // Hide editor without saving
         const section = document.getElementById("termsEditorSection");
         const button = document.getElementById("termsEditorToggle");
-        
+
         section.classList.add("hidden");
         button.textContent = "Modify Terms & Conditions";
-        
+
         // Reset editor content to current terms
         document.getElementById("termsEditor").value = currentTermsHTML;
       }
@@ -1584,13 +1614,13 @@
         // Create a temporary div to parse HTML and extract text
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = currentTermsHTML;
-        
+
         // Convert to text while preserving some structure
         let text = tempDiv.textContent || tempDiv.innerText || "";
-        
+
         // Clean up extra whitespace
         text = text.replace(/\s+/g, " ").trim();
-        
+
         // If the conversion results in very short text, use a fallback
         if (text.length < 50) {
           text = `TALENT RELEASE AGREEMENT
@@ -1608,7 +1638,7 @@ I understand and agree that:
 • Copyright and ownership of the materials belong to the Photographer and/or Client;
 • I have read and understand this release, and I give my consent voluntarily.`;
         }
-        
+
         return text;
       }
 
@@ -2052,24 +2082,6 @@ I understand and agree that:
         }
       }
 
-      // Location Management
-      function requestLocation() {
-        if ("geolocation" in navigator) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              currentLocation = {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                accuracy: position.coords.accuracy,
-              };
-            },
-            (error) => {
-              console.log("Location access denied or unavailable");
-            }
-          );
-        }
-      }
-
       // Form Submission
       async function submitForm() {
         try {
@@ -2135,7 +2147,6 @@ I understand and agree that:
             photo: currentPhoto,
 
             // Metadata
-            gpsLocation: currentLocation,
             userAgent: navigator.userAgent,
             status: "completed",
           };
@@ -2628,7 +2639,7 @@ I understand and agree that:
         const submissions = JSON.parse(
           localStorage.getItem("submissions") || "[]"
         );
-        
+
         if (submissions.length === 0) {
           alert("No history to clear.");
           return;
@@ -2637,17 +2648,19 @@ I understand and agree that:
         // Create custom confirmation dialog
         const confirmed = confirm(
           `Are you sure you want to clear all form history?\n\n` +
-          `This will permanently delete ${submissions.length} submission${submissions.length === 1 ? '' : 's'}.\n\n` +
-          `This action cannot be undone.`
+            `This will permanently delete ${submissions.length} submission${
+              submissions.length === 1 ? "" : "s"
+            }.\n\n` +
+            `This action cannot be undone.`
         );
 
         if (confirmed) {
           // Clear the submissions from localStorage
           localStorage.removeItem("submissions");
-          
+
           // Reload the history view to show empty state
           loadHistory();
-          
+
           // Show success message
           alert("Form history has been cleared successfully.");
         }
@@ -2689,5 +2702,13 @@ I understand and agree that:
         document.querySelector(".nav-buttons").appendChild(installBtn);
       });
     </script>
+    <script>
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.register (
+        '/github-page-pwa/sw.js',
+        {scope: '/github-page-pwa/'}
+      )
+    }
+  </script>
   </body>
 </html>
