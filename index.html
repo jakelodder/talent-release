@@ -89,6 +89,7 @@
       .nav-buttons {
         display: flex;
         gap: 8px;
+        align-items: center;
       }
 
       .btn {
@@ -659,20 +660,37 @@
       <div class="container">
         <div class="header-content">
           <div class="logo">Talent Release</div>
-          <div class="nav-buttons">
-            <button class="btn btn-secondary" onclick="showHistory()">
-              History
-            </button>
-            <button class="theme-toggle" onclick="toggleTheme()">
-              <div class="theme-slider" id="themeSlider">
-                <span class="theme-icon sun">
-                  <div class="sun-icon"></div>
-                </span>
-                <span class="theme-icon moon">
-                  <div class="moon-icon"></div>
-                </span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="form-locked-indicator hidden" id="lockedIndicator">FORM LOCKED</span>
+            <div class="nav-buttons">
+              <div 
+                class="lock-button" 
+                id="lockButton"
+                onmousedown="startLockHold(event)"
+                onmouseup="endLockHold()"
+                onmouseleave="endLockHold()"
+                ontouchstart="startLockHold(event)"
+                ontouchend="endLockHold()"
+                ontouchcancel="endLockHold()"
+                title="Press and hold for 3 seconds to lock/unlock form"
+              >
+                <div class="lock-progress" id="lockProgress"></div>
+                <span class="lock-icon" id="lockIcon">🔓</span>
               </div>
-            </button>
+              <button class="btn btn-secondary" onclick="showHistory()">
+                History
+              </button>
+              <button class="theme-toggle" onclick="toggleTheme()">
+                <div class="theme-slider" id="themeSlider">
+                  <span class="theme-icon sun">
+                    <div class="sun-icon"></div>
+                  </span>
+                  <span class="theme-icon moon">
+                    <div class="moon-icon"></div>
+                  </span>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -915,31 +933,13 @@
             <div class="form-section">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                 <h3 style="margin-bottom: 0;">Talent Release Agreement</h3>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <span class="form-locked-indicator hidden" id="lockedIndicator">FORM LOCKED</span>
-                  <button 
-                    class="btn btn-secondary" 
-                    onclick="toggleTermsEditor()"
-                    id="termsEditorToggle"
-                    style="display: none;"
-                  >
-                    Modify Talent Release Agreement
-                  </button>
-                  <div 
-                    class="lock-button" 
-                    id="lockButton"
-                    onmousedown="startLockHold(event)"
-                    onmouseup="endLockHold()"
-                    onmouseleave="endLockHold()"
-                    ontouchstart="startLockHold(event)"
-                    ontouchend="endLockHold()"
-                    ontouchcancel="endLockHold()"
-                    title="Press and hold for 3 seconds to lock/unlock form"
-                  >
-                    <div class="lock-progress" id="lockProgress"></div>
-                    <span class="lock-icon" id="lockIcon">🔓</span>
-                  </div>
-                </div>
+                <button 
+                  class="btn btn-secondary" 
+                  onclick="toggleTermsEditor()"
+                  id="termsEditorToggle"
+                >
+                  Modify Talent Release Agreement
+                </button>
               </div>
 
               <!-- Terms Editor Section (Hidden by default) -->
