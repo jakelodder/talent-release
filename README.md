@@ -17,7 +17,7 @@ A comprehensive web application for capturing digital talent release forms with 
 - **Witness Signatures** - Persistant witness signature
 - **Children/Dependants Support** - Guardian consent forms for minors
 - **Customizable Talent Release Agreement** - HTML-editable terms with live preview and historical preservation
-- **Lock Mode** - Hide abilty to modify agreement and delete history (press and hold lock for 3sec)
+- **Lock Mode** - Prevent changes to key fields and block history deletion. Hold lock for 3 seconds to activate.
 - **Form History** - Local storage of all submissions with PDF re-generation
 - **Dark/Light Theme** - User preference theming with automatic persistence
 
@@ -30,16 +30,23 @@ A comprehensive web application for capturing digital talent release forms with 
 
 ## 🛠️ Installation
 
-### Option 1: Direct Use
-1. Download the HTML file
-2. Open in any modern web browser
-3. Start using immediately - no setup required
+### 👉 Option 1: Use in Browser
+1. Go to [the web app](https://jakelodder.github.io/talent-release/) via the link in the top-right corner of this GitHub repo.
+2. The app works instantly — no setup required.
+3. Once opened, it will continue to work offline thanks to PWA support.
 
-### Option 2: Web Server
-1. Place the HTML file on any web server
-2. Access via browser
-3. Install as PWA for app-like experience
+### 📲 Option 2: Add to Home Screen (PWA Install)
 
+#### On iPhone/iPad (Safari):
+1. Open the app link in Safari: [jakelodder.github.io/talent-release](https://jakelodder.github.io/talent-release/)
+2. Tap the **Share** button (bottom of screen).
+3. Select **Add to Home Screen**.
+4. Tap **Add** — the app will now appear on your home screen like a regular app.
+
+#### On Android (Chrome or Edge):
+1. Visit the app link: [jakelodder.github.io/talent-release](https://jakelodder.github.io/talent-release/)
+2. Open the browser menu (⋮) and choose **Install App** or **Add to Home Screen**.
+3. Confirm to add — the app will now launch full screen from your home screen.
 
 ## 📋 Usage
 
