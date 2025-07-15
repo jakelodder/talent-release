@@ -588,41 +588,6 @@
         }
       }
 
-      // Clear History with Confirmation
-      function clearHistoryWithConfirmation() {
-        if (isFormLocked) {
-          alert("Form is locked. Press and hold the lock button for 3 seconds to unlock.");
-          return;
-        }
-
-        const submissions = JSON.parse(
-          localStorage.getItem("submissions") || "[]"
-        );
-        
-        if (submissions.length === 0) {
-          alert("No history to clear.");
-          return;
-        }
-
-        // Create custom confirmation dialog
-        const confirmed = confirm(
-          `Are you sure you want to clear all form history?\n\n` +
-          `This will permanently delete ${submissions.length} submission${submissions.length === 1 ? '' : 's'}.\n\n` +
-          `This action cannot be undone.`
-        );
-
-        if (confirmed) {
-          // Clear the submissions from localStorage
-          localStorage.removeItem("submissions");
-          
-          // Reload the history view to show empty state
-          loadHistory();
-          
-          // Show success message
-          alert("Form history has been cleared successfully.");
-        }
-      }
-
       .lock-icon {
         font-size: 16px;
         z-index: 1;
@@ -661,11 +626,13 @@
       <div class="container">
         <div class="header-content">
           <div class="logo">Talent Release</div>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="form-locked-indicator hidden" id="lockedIndicator">FORM LOCKED</span>
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span class="form-locked-indicator hidden" id="lockedIndicator"
+              >FORM LOCKED</span
+            >
             <div class="nav-buttons">
-              <div 
-                class="lock-button" 
+              <div
+                class="lock-button"
                 id="lockButton"
                 onmousedown="startLockHold(event)"
                 onmouseup="endLockHold()"
@@ -724,15 +691,100 @@
                   All fields below are required and saved across sessions
                 </p>
 
-                <div class="form-group" id="clientName-group">
-                  <label for="clientName">Client Name *</label>
-                  <input
-                    type="text"
-                    id="clientName"
-                    name="clientName"
-                    required
-                  />
+                <div
+                  style="
+                    display: flex;
+                    gap: 20px;
+                    align-items: stretch;
+                    margin-bottom: 20px;
+                  "
+                >
+                  <div style="flex: 1; display: flex; flex-direction: column">
+                    <label
+                      for="clientName"
+                      style="
+                        display: block;
+                        margin-bottom: 8px;
+                        font-weight: 500;
+                        color: var(--text-primary);
+                      "
+                      >Client Name *</label
+                    >
+                    <input
+                      type="text"
+                      id="clientName"
+                      name="clientName"
+                      required
+                      style="
+                        width: 100%;
+                        padding: 12px;
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        font-size: 16px;
+                        background: var(--bg-primary);
+                        color: var(--text-primary);
+                      "
+                    />
+                  </div>
+                  <div
+                    id="logoColumnContainer"
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      justify-content: center;
+                      align-items: center;
+                      gap: 8px;
+                      min-width: 140px;
+                    "
+                  >
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      onclick="uploadClientLogo()"
+                      id="logoUploadBtnInline"
+                      style="white-space: nowrap; align-self: stretch"
+                    >
+                      Add Client Logo
+                    </button>
+                    <div
+                      id="logoPreview"
+                      style="
+                        display: none;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 6px;
+                      "
+                    >
+                      <img
+                        id="logoImage"
+                        style="
+                          max-width: 120px;
+                          max-height: 60px;
+                          object-fit: contain;
+                          border: 1px solid var(--border);
+                          border-radius: 4px;
+                          background: white;
+                        "
+                      />
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="removeClientLogo()"
+                        style="font-size: 10px; padding: 2px 6px"
+                        id="logoRemoveBtn"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
                 </div>
+                <input
+                  type="file"
+                  id="logoFileInput"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="handleLogoUpload(event)"
+                />
 
                 <div class="form-group" id="projectName-group">
                   <label for="projectName">Project Name *</label>
@@ -932,10 +984,17 @@
             </div>
 
             <div class="form-section">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <h3 style="margin-bottom: 0;">Talent Release Agreement</h3>
-                <button 
-                  class="btn btn-secondary" 
+              <div
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 16px;
+                "
+              >
+                <h3 style="margin-bottom: 0">Talent Release Agreement</h3>
+                <button
+                  class="btn btn-secondary"
                   onclick="toggleTermsEditor()"
                   id="termsEditorToggle"
                 >
@@ -944,33 +1003,68 @@
               </div>
 
               <!-- Terms Editor Section (Hidden by default) -->
-              <div id="termsEditorSection" class="hidden" style="margin-bottom: 20px;">
-                <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
-                  <h4 style="margin-bottom: 12px; color: var(--primary);">Custom Talent Release Agreement Editor</h4>
-                  <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 16px;">
-                    Paste your custom talent release agreement below. You can use HTML formatting (p, strong, em, ol, ul, li tags).
-                    <br>
-                    <strong>Tip:</strong> Use <a href="https://text-html.com/" target="_blank" style="color: var(--primary); text-decoration: none;">text-html.com</a> for easy text-to-HTML conversion.
+              <div
+                id="termsEditorSection"
+                class="hidden"
+                style="margin-bottom: 20px"
+              >
+                <div
+                  style="
+                    background: var(--bg-tertiary);
+                    padding: 16px;
+                    border-radius: 8px;
+                    margin-bottom: 16px;
+                  "
+                >
+                  <h4 style="margin-bottom: 12px; color: var(--primary)">
+                    Custom Talent Release Agreement Editor
+                  </h4>
+                  <p
+                    style="
+                      font-size: 14px;
+                      color: var(--text-secondary);
+                      margin-bottom: 16px;
+                    "
+                  >
+                    Paste your custom talent release agreement below. You can
+                    use HTML formatting (p, strong, em, ol, ul, li tags).
+                    <br />
+                    <strong>Tip:</strong> Use
+                    <a
+                      href="https://text-html.com/"
+                      target="_blank"
+                      style="color: var(--primary); text-decoration: none"
+                      >text-html.com</a
+                    >
+                    for easy text-to-HTML conversion.
                   </p>
-                  
+
                   <div class="form-group">
-                    <label for="termsEditor">Talent Release Agreement HTML:</label>
-                    <textarea 
-                      id="termsEditor" 
-                      rows="10" 
-                      style="font-family: monospace; font-size: 13px;"
+                    <label for="termsEditor"
+                      >Talent Release Agreement HTML:</label
+                    >
+                    <textarea
+                      id="termsEditor"
+                      rows="10"
+                      style="font-family: monospace; font-size: 13px"
                       placeholder="Paste your HTML formatted talent release agreement here..."
                     ></textarea>
                   </div>
 
-                  <div style="display: flex; gap: 8px;">
+                  <div style="display: flex; gap: 8px">
                     <button class="btn btn-primary" onclick="saveCustomTerms()">
                       Save Custom Agreement
                     </button>
-                    <button class="btn btn-secondary" onclick="restoreDefaultTerms()">
+                    <button
+                      class="btn btn-secondary"
+                      onclick="restoreDefaultTerms()"
+                    >
                       Restore to Default
                     </button>
-                    <button class="btn btn-secondary" onclick="cancelTermsEdit()">
+                    <button
+                      class="btn btn-secondary"
+                      onclick="cancelTermsEdit()"
+                    >
                       Cancel
                     </button>
                   </div>
@@ -1139,11 +1233,11 @@
               "
             >
               <h2>Form History</h2>
-              <div style="display: flex; gap: 8px;">
-                <button 
-                  class="btn btn-secondary" 
+              <div style="display: flex; gap: 8px">
+                <button
+                  class="btn btn-secondary"
                   onclick="clearHistoryWithConfirmation()"
-                  style="background: var(--danger); color: white;"
+                  style="background: var(--danger); color: white"
                   id="clearHistoryBtn"
                 >
                   Clear History
@@ -1168,6 +1262,7 @@
       let currentSignature = null;
       let currentWitnessSignature = null;
       let currentPhoto = null;
+      let currentClientLogo = null;
       let isDrawing = false;
       let cameraStream = null;
       let currentFacingMode = "user"; // Start with front camera
@@ -1413,14 +1508,12 @@
 
       // Theme Management
       function toggleTheme() {
-        console.log("Theme toggle clicked"); // Debug log
         const currentTheme =
           document.documentElement.getAttribute("data-theme");
         const newTheme = currentTheme === "dark" ? "light" : "dark";
         document.documentElement.setAttribute("data-theme", newTheme);
         localStorage.setItem("theme", newTheme);
         updateThemeToggle();
-        console.log("Theme changed to:", newTheme); // Debug log
       }
 
       function updateThemeToggle() {
@@ -1474,6 +1567,20 @@
           document.getElementById("witnessSignaturePreview").style.display =
             "none";
         }
+
+        // Load client logo
+        const savedClientLogo = localStorage.getItem("persistent_clientLogo");
+        if (savedClientLogo) {
+          currentClientLogo = savedClientLogo;
+          document.getElementById("logoImage").src = savedClientLogo;
+          document.getElementById("logoPreview").style.display = "flex";
+          document.getElementById("logoUploadBtnInline").textContent =
+            "Change Logo";
+        } else {
+          document.getElementById("logoPreview").style.display = "none";
+          document.getElementById("logoUploadBtnInline").textContent =
+            "Add Client Logo";
+        }
       }
 
       function savePersistentFields() {
@@ -1498,11 +1605,18 @@
             currentWitnessSignature
           );
         }
+
+        // Save client logo
+        if (currentClientLogo) {
+          localStorage.setItem("persistent_clientLogo", currentClientLogo);
+        }
       }
 
       function clearProjectInfo() {
         if (isFormLocked) {
-          alert("Form is locked. Press and hold the lock button for 3 seconds to unlock.");
+          alert(
+            "Form is locked. Press and hold the lock button for 3 seconds to unlock."
+          );
           return;
         }
 
@@ -1522,9 +1636,16 @@
         localStorage.removeItem("persistent_photographer");
         localStorage.removeItem("persistent_witness");
         localStorage.removeItem("persistent_witnessSignature");
+        localStorage.removeItem("persistent_clientLogo");
 
         // Clear witness signature
         currentWitnessSignature = null;
+
+        // Clear client logo
+        currentClientLogo = null;
+        document.getElementById("logoPreview").style.display = "none";
+        document.getElementById("logoUploadBtn").textContent =
+          "Upload Client Logo";
 
         // Hide witness signature preview
         document.getElementById("witnessSignaturePreview").style.display =
@@ -1555,16 +1676,20 @@
       // Terms and Conditions Management
       function loadCustomTerms() {
         const savedTerms = localStorage.getItem("customTermsHTML");
-        if (savedTerms && 
-            !savedTerms.includes('<meta charset') && 
-            !savedTerms.includes('<title>') &&
-            !savedTerms.includes('<!DOCTYPE') &&
-            savedTerms.length < 10000) {
+        if (
+          savedTerms &&
+          !savedTerms.includes("<meta charset") &&
+          !savedTerms.includes("<title>") &&
+          !savedTerms.includes("<!DOCTYPE") &&
+          savedTerms.length < 10000
+        ) {
           currentTermsHTML = savedTerms;
         } else {
           // Clear corrupted data and use default
           if (savedTerms) {
-            console.warn("Corrupted custom terms detected, clearing localStorage");
+            console.warn(
+              "Corrupted custom terms detected, clearing localStorage"
+            );
             localStorage.removeItem("customTermsHTML");
           }
           currentTermsHTML = defaultTermsHTML;
@@ -1576,11 +1701,13 @@
         const container = document.getElementById("termsContainer");
         if (container) {
           // Emergency fix: validate that currentTermsHTML is actually terms content
-          if (currentTermsHTML && 
-              !currentTermsHTML.includes('<meta charset') && 
-              !currentTermsHTML.includes('<title>') &&
-              !currentTermsHTML.includes('<!DOCTYPE') &&
-              currentTermsHTML.length < 10000) {
+          if (
+            currentTermsHTML &&
+            !currentTermsHTML.includes("<meta charset") &&
+            !currentTermsHTML.includes("<title>") &&
+            !currentTermsHTML.includes("<!DOCTYPE") &&
+            currentTermsHTML.length < 10000
+          ) {
             container.innerHTML = currentTermsHTML;
           } else {
             // Corrupted data detected - reset to default
@@ -1594,7 +1721,9 @@
 
       function toggleTermsEditor() {
         if (isFormLocked) {
-          alert("Form is locked. Press and hold the lock button for 3 seconds to unlock.");
+          alert(
+            "Form is locked. Press and hold the lock button for 3 seconds to unlock."
+          );
           return;
         }
 
@@ -1615,10 +1744,14 @@
       }
 
       function saveCustomTerms() {
-        const editorContent = document.getElementById("termsEditor").value.trim();
-        
+        const editorContent = document
+          .getElementById("termsEditor")
+          .value.trim();
+
         if (!editorContent) {
-          alert("Please enter some talent release agreement content before saving.");
+          alert(
+            "Please enter some talent release agreement content before saving."
+          );
           return;
         }
 
@@ -1626,48 +1759,49 @@
         const tempDiv = document.createElement("div");
         try {
           tempDiv.innerHTML = editorContent;
-          
+
           // Update current terms
           currentTermsHTML = editorContent;
-          
+
           // Save to localStorage
           localStorage.setItem("customTermsHTML", currentTermsHTML);
-          
+
           // Update display
           updateTermsDisplay();
-          
+
           // Hide editor
           toggleTermsEditor();
-          
+
           alert("Custom talent release agreement has been saved successfully!");
-          
         } catch (error) {
-          alert("Invalid HTML content. Please check your formatting and try again.");
+          alert(
+            "Invalid HTML content. Please check your formatting and try again."
+          );
         }
       }
 
       function restoreDefaultTerms() {
         const confirmed = confirm(
           "Are you sure you want to restore the default talent release agreement?\n\n" +
-          "This will overwrite your custom agreement and cannot be undone."
+            "This will overwrite your custom agreement and cannot be undone."
         );
 
         if (confirmed) {
           // Restore default terms
           currentTermsHTML = defaultTermsHTML;
-          
+
           // Remove custom terms from storage
           localStorage.removeItem("customTermsHTML");
-          
+
           // Update display
           updateTermsDisplay();
-          
+
           // Update editor content if editor is visible
           const editorTextarea = document.getElementById("termsEditor");
           if (editorTextarea) {
             editorTextarea.value = currentTermsHTML;
           }
-          
+
           alert("Talent release agreement has been restored to default.");
         }
       }
@@ -1676,10 +1810,10 @@
         // Hide editor without saving
         const section = document.getElementById("termsEditorSection");
         const button = document.getElementById("termsEditorToggle");
-        
+
         section.classList.add("hidden");
         button.textContent = "Modify Talent Release Agreement";
-        
+
         // Reset editor content to current terms
         document.getElementById("termsEditor").value = currentTermsHTML;
       }
@@ -1688,11 +1822,11 @@
       function addFormattedTermsToPDF(doc, html, startX, startY, maxWidth) {
         let currentY = startY;
         const lineHeight = 3;
-        
+
         // Simple approach: convert HTML to plain text but preserve structure
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = html;
-        
+
         // Process each top-level element
         function processElement(element) {
           if (element.nodeType === Node.TEXT_NODE) {
@@ -1700,7 +1834,7 @@
             if (text) {
               doc.setFont(undefined, "normal");
               const lines = doc.splitTextToSize(text, maxWidth);
-              lines.forEach(line => {
+              lines.forEach((line) => {
                 if (line.trim()) {
                   doc.text(line.trim(), startX, currentY);
                   currentY += lineHeight;
@@ -1709,18 +1843,18 @@
             }
             return;
           }
-          
+
           if (element.nodeType !== Node.ELEMENT_NODE) return;
-          
+
           const tagName = element.tagName.toLowerCase();
-          
+
           switch (tagName) {
-            case 'p':
+            case "p":
               const pText = element.textContent.trim();
               if (pText) {
                 doc.setFont(undefined, "normal");
                 const lines = doc.splitTextToSize(pText, maxWidth);
-                lines.forEach(line => {
+                lines.forEach((line) => {
                   if (line.trim()) {
                     doc.text(line.trim(), startX, currentY);
                     currentY += lineHeight;
@@ -1729,23 +1863,23 @@
               }
               // No extra spacing after paragraph
               break;
-              
-            case 'ol':
+
+            case "ol":
               currentY += lineHeight; // Small spacing before list
               let counter = 1;
-              Array.from(element.children).forEach(li => {
-                if (li.tagName.toLowerCase() === 'li') {
+              Array.from(element.children).forEach((li) => {
+                if (li.tagName.toLowerCase() === "li") {
                   const liText = li.textContent.trim();
                   if (liText) {
                     // Add number
                     doc.setFont(undefined, "normal");
                     doc.text(`${counter}. `, startX, currentY);
-                    
+
                     // Add list item text with proper indentation
                     const listStartX = startX + 12;
                     const listMaxWidth = maxWidth - 12;
                     const lines = doc.splitTextToSize(liText, listMaxWidth);
-                    
+
                     lines.forEach((line, index) => {
                       if (line.trim()) {
                         const xPos = index === 0 ? listStartX : startX + 12;
@@ -1762,22 +1896,22 @@
               });
               currentY += lineHeight * 0.5; // Smaller spacing after list
               break;
-              
-            case 'ul':
+
+            case "ul":
               currentY += lineHeight; // Small spacing before list
-              Array.from(element.children).forEach(li => {
-                if (li.tagName.toLowerCase() === 'li') {
+              Array.from(element.children).forEach((li) => {
+                if (li.tagName.toLowerCase() === "li") {
                   const liText = li.textContent.trim();
                   if (liText) {
                     // Add bullet
                     doc.setFont(undefined, "normal");
-                    doc.text('• ', startX, currentY);
-                    
+                    doc.text("• ", startX, currentY);
+
                     // Add list item text with proper indentation
                     const listStartX = startX + 10;
                     const listMaxWidth = maxWidth - 10;
                     const lines = doc.splitTextToSize(liText, listMaxWidth);
-                    
+
                     lines.forEach((line, index) => {
                       if (line.trim()) {
                         const xPos = index === 0 ? listStartX : startX + 10;
@@ -1793,14 +1927,14 @@
               });
               currentY += lineHeight * 0.5; // Smaller spacing after list
               break;
-              
+
             default:
               // For other elements, just get the text content
               const text = element.textContent.trim();
               if (text) {
                 doc.setFont(undefined, "normal");
                 const lines = doc.splitTextToSize(text, maxWidth);
-                lines.forEach(line => {
+                lines.forEach((line) => {
                   if (line.trim()) {
                     doc.text(line.trim(), startX, currentY);
                     currentY += lineHeight;
@@ -1811,10 +1945,10 @@
               break;
           }
         }
-        
+
         // Start processing
-        tempDiv.childNodes.forEach(child => processElement(child));
-        
+        tempDiv.childNodes.forEach((child) => processElement(child));
+
         return currentY;
       }
 
@@ -2120,7 +2254,102 @@
         button.className = "btn btn-primary";
       }
 
-      // Children/Dependants Section Management
+      // Client Logo Management
+      function uploadClientLogo() {
+        if (isFormLocked) {
+          alert(
+            "Form is locked. Press and hold the lock button for 3 seconds to unlock."
+          );
+          return;
+        }
+
+        const fileInput = document.getElementById("logoFileInput");
+        fileInput.click();
+      }
+
+      function handleLogoUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith("image/")) {
+          alert("Please select an image file.");
+          return;
+        }
+
+        // Validate file size (limit to 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert(
+            "Image file is too large. Please select an image smaller than 5MB."
+          );
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          // Create an image to get dimensions and compress if needed
+          const img = new Image();
+          img.onload = function () {
+            // Create canvas for compression and sizing
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            // Calculate scaling to fit within reasonable bounds for PDF
+            const maxWidth = 400;
+            const maxHeight = 200;
+            let { width, height } = img;
+
+            // Scale down if too large
+            if (width > maxWidth || height > maxHeight) {
+              const scale = Math.min(maxWidth / width, maxHeight / height);
+              width *= scale;
+              height *= scale;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+
+            // Fill with white background to handle PNG transparency
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw image on top
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Convert to base64 with compression
+            currentClientLogo = canvas.toDataURL("image/jpeg", 0.8);
+
+            // Update UI
+            document.getElementById("logoImage").src = currentClientLogo;
+            document.getElementById("logoPreview").style.display = "flex";
+            document.getElementById("logoUploadBtnInline").textContent =
+              "Change Logo";
+
+            // Save to localStorage
+            localStorage.setItem("persistent_clientLogo", currentClientLogo);
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+
+        // Clear the file input
+        event.target.value = "";
+      }
+
+      function removeClientLogo() {
+        if (isFormLocked) {
+          alert(
+            "Form is locked. Press and hold the lock button for 3 seconds to unlock."
+          );
+          return;
+        }
+
+        currentClientLogo = null;
+        document.getElementById("logoPreview").style.display = "none";
+        document.getElementById("logoUploadBtnInline").textContent =
+          "Add Client Logo";
+        localStorage.removeItem("persistent_clientLogo");
+      }
       function toggleChildrenSection() {
         const section = document.getElementById("childrenSection");
         const button = document.getElementById("childrenToggle");
@@ -2188,7 +2417,8 @@
           }
 
           // Toggle facing mode
-          currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+          currentFacingMode =
+            currentFacingMode === "user" ? "environment" : "user";
 
           // Start camera with new facing mode
           const stream = await navigator.mediaDevices.getUserMedia({
@@ -2213,13 +2443,15 @@
           // Keep button text consistent
           const switchBtn = document.getElementById("switchCameraBtn");
           switchBtn.textContent = "Switch Camera";
-
         } catch (error) {
           console.error("Error switching camera:", error);
-          alert("Unable to switch camera. This device may only have one camera.");
-          
+          alert(
+            "Unable to switch camera. This device may only have one camera."
+          );
+
           // Revert facing mode if switch failed
-          currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+          currentFacingMode =
+            currentFacingMode === "user" ? "environment" : "user";
         }
       }
 
@@ -2383,6 +2615,7 @@
             signature: currentSignature,
             witnessSignature: currentWitnessSignature,
             photo: currentPhoto,
+            clientLogo: currentClientLogo,
 
             // Capture terms at time of submission
             termsHTML: currentTermsHTML,
@@ -2445,6 +2678,16 @@
         currentPhoto = null;
       }
 
+      // Image loading helper
+      function loadImage(src) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+          img.src = src;
+        });
+      }
+
       // PDF Generation
       async function generatePDF(formData) {
         const { jsPDF } = window.jspdf;
@@ -2462,6 +2705,51 @@
         doc.text("TALENT RELEASE FORM", pageWidth / 2, yPos, {
           align: "center",
         });
+
+        // Add client logo in top right corner if available
+        if (formData.clientLogo) {
+          try {
+            // Define logo area (top right corner)
+            const logoAreaWidth = 35; // PDF units (mm)
+            const logoAreaHeight = 18; // PDF units (mm)
+            const logoX = pageWidth - margin - logoAreaWidth;
+            const logoY = 10; // Small margin from top
+
+            // Load the image and get actual dimensions
+            const img = await loadImage(formData.clientLogo);
+            const imgAspectRatio = img.naturalWidth / img.naturalHeight;
+            const areaAspectRatio = logoAreaWidth / logoAreaHeight;
+
+            let drawWidth, drawHeight;
+
+            // Calculate dimensions that fit within area while maintaining aspect ratio
+            if (imgAspectRatio > areaAspectRatio) {
+              // Image is wider - fit to width
+              drawWidth = logoAreaWidth;
+              drawHeight = logoAreaWidth / imgAspectRatio;
+            } else {
+              // Image is taller - fit to height
+              drawHeight = logoAreaHeight;
+              drawWidth = logoAreaHeight * imgAspectRatio;
+            }
+
+            // Center the logo within the area
+            const drawX = logoX + (logoAreaWidth - drawWidth) / 2;
+            const drawY = logoY + (logoAreaHeight - drawHeight) / 2;
+
+            // Add the logo to PDF with calculated dimensions
+            doc.addImage(
+              formData.clientLogo,
+              "JPEG",
+              drawX,
+              drawY,
+              drawWidth,
+              drawHeight
+            );
+          } catch (e) {
+            console.warn("Failed to add client logo to PDF:", e);
+          }
+        }
 
         // Submission date and time only
         yPos += 8;
@@ -2686,11 +2974,18 @@
         // Add terms text with smaller font for long content
         doc.setFontSize(6); // Even smaller font size to fit more content
         doc.setFont(undefined, "normal");
-        
+
         // Use terms from form data (historical) or current terms
-        const termsHTML = formData.termsHTML || currentTermsHTML || defaultTermsHTML;
-        yPos = addFormattedTermsToPDF(doc, termsHTML, margin + 2, yPos, contentWidth - 4);
-        
+        const termsHTML =
+          formData.termsHTML || currentTermsHTML || defaultTermsHTML;
+        yPos = addFormattedTermsToPDF(
+          doc,
+          termsHTML,
+          margin + 2,
+          yPos,
+          contentWidth - 4
+        );
+
         // Add some spacing after terms
         yPos += 8;
 
@@ -2875,20 +3170,20 @@
       // Form Lock Management
       function startLockHold(event) {
         event.preventDefault();
-        
+
         lockStartTime = Date.now();
         const lockButton = document.getElementById("lockButton");
         const lockProgress = document.getElementById("lockProgress");
-        
+
         // Add visual feedback
         lockButton.classList.add("holding");
         lockProgress.classList.add("active");
-        
+
         // Vibrate if supported (mobile)
         if (navigator.vibrate) {
           navigator.vibrate(50);
         }
-        
+
         // Set timer for 3 seconds
         lockHoldTimer = setTimeout(() => {
           toggleFormLock();
@@ -2901,27 +3196,27 @@
           clearTimeout(lockHoldTimer);
           lockHoldTimer = null;
         }
-        
+
         const lockButton = document.getElementById("lockButton");
         const lockProgress = document.getElementById("lockProgress");
-        
+
         // Remove visual feedback
         lockButton.classList.remove("holding");
         lockProgress.classList.remove("active");
-        
+
         lockStartTime = 0;
       }
 
       function toggleFormLock() {
         isFormLocked = !isFormLocked;
-        
+
         // Vibrate on toggle (mobile)
         if (navigator.vibrate) {
           navigator.vibrate([100, 50, 100]);
         }
-        
+
         updateFormLockState();
-        
+
         // Save lock state
         localStorage.setItem("formLocked", isFormLocked.toString());
       }
@@ -2933,38 +3228,52 @@
         const termsEditorToggle = document.getElementById("termsEditorToggle");
         const clearProjectBtn = document.getElementById("clearProjectBtn");
         const clearHistoryBtn = document.getElementById("clearHistoryBtn");
-        
+        const logoUploadBtnInline = document.getElementById(
+          "logoUploadBtnInline"
+        );
+        const logoRemoveBtn = document.getElementById("logoRemoveBtn");
+
         if (isFormLocked) {
           // Locked state
           lockIcon.textContent = "🔒";
           lockButton.classList.add("locked");
           lockButton.title = "Press and hold for 3 seconds to unlock form";
           lockedIndicator.classList.remove("hidden");
-          
+
           // Hide admin buttons
           if (termsEditorToggle) termsEditorToggle.style.display = "none";
           if (clearProjectBtn) clearProjectBtn.style.display = "none";
           if (clearHistoryBtn) clearHistoryBtn.style.display = "none";
-          
+          if (logoUploadBtnInline) logoUploadBtnInline.style.display = "none";
+          if (logoRemoveBtn) logoRemoveBtn.style.display = "none";
+
+          // Remove margin from logo container when locked but keep flex-end alignment
+          const logoContainer = document.getElementById("logoColumnContainer");
+          if (logoContainer) {
+            logoContainer.style.marginBottom = "0px";
+            logoContainer.style.justifyContent = "flex-end";
+          }
         } else {
           // Unlocked state
           lockIcon.textContent = "🔓";
           lockButton.classList.remove("locked");
           lockButton.title = "Press and hold for 3 seconds to lock form";
           lockedIndicator.classList.add("hidden");
-          
+
           // Show admin buttons
           if (termsEditorToggle) termsEditorToggle.style.display = "block";
           if (clearProjectBtn) clearProjectBtn.style.display = "block";
           if (clearHistoryBtn) clearHistoryBtn.style.display = "block";
+          if (logoUploadBtnInline) logoUploadBtnInline.style.display = "block";
+          if (logoRemoveBtn) logoRemoveBtn.style.display = "block";
+
+          // Restore margin to logo container when unlocked and keep flex-end alignment
+          const logoContainer = document.getElementById("logoColumnContainer");
+          if (logoContainer) {
+            logoContainer.style.marginBottom = "8px";
+            logoContainer.style.justifyContent = "flex-end";
+          }
         }
-        
-        // Debug logging for mobile
-        console.log("Lock state updated:", {
-          isFormLocked,
-          clearHistoryBtn: clearHistoryBtn ? "found" : "not found",
-          clearHistoryDisplay: clearHistoryBtn ? clearHistoryBtn.style.display : "N/A"
-        });
       }
 
       // Load lock state from storage
@@ -2977,14 +3286,16 @@
 
       function clearHistoryWithConfirmation() {
         if (isFormLocked) {
-          alert("Form is locked. Press and hold the lock button for 3 seconds to unlock.");
+          alert(
+            "Form is locked. Press and hold the lock button for 3 seconds to unlock."
+          );
           return;
         }
 
         const submissions = JSON.parse(
           localStorage.getItem("submissions") || "[]"
         );
-        
+
         if (submissions.length === 0) {
           alert("No history to clear.");
           return;
@@ -2993,17 +3304,19 @@
         // Create custom confirmation dialog
         const confirmed = confirm(
           `Are you sure you want to clear all form history?\n\n` +
-          `This will permanently delete ${submissions.length} submission${submissions.length === 1 ? '' : 's'}.\n\n` +
-          `This action cannot be undone.`
+            `This will permanently delete ${submissions.length} submission${
+              submissions.length === 1 ? "" : "s"
+            }.\n\n` +
+            `This action cannot be undone.`
         );
 
         if (confirmed) {
           // Clear the submissions from localStorage
           localStorage.removeItem("submissions");
-          
+
           // Reload the history view to show empty state
           loadHistory();
-          
+
           // Show success message
           alert("Form history has been cleared successfully.");
         }
