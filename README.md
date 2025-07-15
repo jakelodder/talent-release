@@ -72,14 +72,15 @@ A comprehensive web application for capturing digital talent release forms with 
 
 ## ⚖️ Legal Compliance
 
-This form generates comprehensive talent releases covering:
+This form includes a generic talent releases covering:
 - Image and video recording rights
 - Usage permissions (commercial, promotional, social media)
 - Worldwide, perpetual licensing
+- No payment, royalties, or other compensation
 - Guardian consent for minors
 - Privacy notice compliance
 
-**Note**: Consult with legal counsel to ensure terms meet your jurisdiction's requirements.
+**Note**: Consult with legal counsel to ensure terms meet your use case and jurisdiction's requirements.
 
 ## 🔧 Customization
 
@@ -116,7 +117,10 @@ This form generates comprehensive talent releases covering:
 
 ## 📈 Changelog
 
-### v1.2.0 (Current)
+### v1.3.0 (Current)
+- **NEW**: Upload custom logo
+
+### v1.2.0
 - **NEW**: Ability to lock custom talent release agreement (press and hold)
 
 ### v1.1.0 (Current)
