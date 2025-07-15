@@ -119,6 +119,7 @@ This form includes a generic talent releases covering:
 
 ### v1.3.0 (Current)
 - **NEW**: Upload custom logo
+- **IMPROVED**: Lock button now locks persistant fields
 
 ### v1.2.0
 - **NEW**: Ability to lock custom talent release agreement (press and hold)
