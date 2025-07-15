@@ -17,6 +17,7 @@ A comprehensive web application for capturing digital talent release forms with 
 - **Witness Signatures** - Persistant witness signature
 - **Children/Dependants Support** - Guardian consent forms for minors
 - **Customizable Talent Release Agreement** - HTML-editable terms with live preview and historical preservation
+- **Custom Client Logo** - Add your client or production company logo to be embedded in the PDF
 - **Lock Mode** - Prevent changes to key fields and block history deletion. Hold lock for 3 seconds to activate.
 - **Form History** - Local storage of all submissions with PDF re-generation
 - **Dark/Light Theme** - User preference theming with automatic persistence
