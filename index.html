@@ -3094,6 +3094,13 @@
         const logoUploadBtnInline = document.getElementById("logoUploadBtnInline");
         const logoRemoveBtn = document.getElementById("logoRemoveBtn");
         
+        // Get persistent field elements
+        const clientNameField = document.getElementById("clientName");
+        const projectNameField = document.getElementById("projectName");
+        const locationField = document.getElementById("location");
+        const photographerField = document.getElementById("photographer");
+        const witnessField = document.getElementById("witness");
+        
         if (isFormLocked) {
           // Locked state
           lockIcon.textContent = "🔒";
@@ -3107,6 +3114,13 @@
           if (clearHistoryBtn) clearHistoryBtn.style.display = "none";
           if (logoUploadBtnInline) logoUploadBtnInline.style.display = "none";
           if (logoRemoveBtn) logoRemoveBtn.style.display = "none";
+          
+          // Disable persistent fields but keep them visible
+          if (clientNameField) clientNameField.disabled = true;
+          if (projectNameField) projectNameField.disabled = true;
+          if (locationField) locationField.disabled = true;
+          if (photographerField) photographerField.disabled = true;
+          if (witnessField) witnessField.disabled = true;
           
           // Remove margin from logo container when locked but keep flex-end alignment
           const logoContainer = document.getElementById("logoColumnContainer");
@@ -3128,6 +3142,13 @@
           if (clearHistoryBtn) clearHistoryBtn.style.display = "block";
           if (logoUploadBtnInline) logoUploadBtnInline.style.display = "block";
           if (logoRemoveBtn) logoRemoveBtn.style.display = "block";
+          
+          // Enable persistent fields
+          if (clientNameField) clientNameField.disabled = false;
+          if (projectNameField) projectNameField.disabled = false;
+          if (locationField) locationField.disabled = false;
+          if (photographerField) photographerField.disabled = false;
+          if (witnessField) witnessField.disabled = false;
           
           // Restore margin to logo container when unlocked and keep flex-end alignment
           const logoContainer = document.getElementById("logoColumnContainer");
