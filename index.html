@@ -1209,6 +1209,9 @@
         initializeSignatureCanvas();
         initializeWitnessSignatureCanvas();
 
+        // Add auto-save listeners for persistent fields
+        setupPersistentFieldAutoSave();
+
         // Load custom terms AFTER DOM is ready
         setTimeout(() => {
           loadCustomTerms();
@@ -1425,6 +1428,44 @@
         }
       }
 
+      // Auto-save persistent fields on change
+      function setupPersistentFieldAutoSave() {
+        const persistentFields = [
+          "clientName",
+          "projectName", 
+          "location",
+          "photographer",
+          "witness"
+        ];
+        
+        persistentFields.forEach(fieldId => {
+          const field = document.getElementById(fieldId);
+          if (field) {
+            // Save on blur (when user leaves the field)
+            field.addEventListener('blur', function() {
+              if (this.value.trim()) {
+                localStorage.setItem(`persistent_${fieldId}`, this.value);
+              } else {
+                localStorage.removeItem(`persistent_${fieldId}`);
+              }
+            });
+            
+            // Also save on input with debounce for real-time saving
+            let saveTimeout;
+            field.addEventListener('input', function() {
+              clearTimeout(saveTimeout);
+              saveTimeout = setTimeout(() => {
+                if (this.value.trim()) {
+                  localStorage.setItem(`persistent_${fieldId}`, this.value);
+                } else {
+                  localStorage.removeItem(`persistent_${fieldId}`);
+                }
+              }, 1000); // Save 1 second after user stops typing
+            });
+          }
+        });
+      }
+
       // Persistent Fields Management
       function loadPersistentFields() {
         const persistentFields = [
@@ -1454,7 +1495,7 @@
         if (savedWitnessSignature) {
           currentWitnessSignature = savedWitnessSignature;
           // Update button and preview state
-          button.textContent = "Witness Signed";
+          button.textContent = "Show Signature Box";
           button.className = "btn btn-secondary";
           document.getElementById("witnessSignaturePreview").style.display =
             "block";
@@ -2012,7 +2053,7 @@
           // Hide the signature box
           container.style.display = "none";
           if (currentWitnessSignature) {
-            button.textContent = "Witness Signed";
+            button.textContent = "Show Signature Box";
             button.className = "btn btn-secondary";
           } else {
             button.textContent = "Add Witness Signature";
@@ -2116,7 +2157,7 @@
 
         // Update button to show signature is captured but DON'T auto-expand
         const button = document.getElementById("witnessSignatureToggle");
-        button.textContent = "Witness Signed";
+        button.textContent = "Show Signature Box";
         button.className = "btn btn-secondary";
 
         // Ensure the signature container stays collapsed
@@ -3101,6 +3142,8 @@
         const photographerField = document.getElementById("photographer");
         const witnessField = document.getElementById("witness");
         const witnessSignatureToggle = document.getElementById("witnessSignatureToggle");
+        const witnessSignatureContainer = document.getElementById("witnessSignatureContainer");
+        const witnessSignaturePreview = document.getElementById("witnessSignaturePreview");
         
         if (isFormLocked) {
           // Locked state
@@ -3116,6 +3159,15 @@
           if (logoUploadBtnInline) logoUploadBtnInline.style.display = "none";
           if (logoRemoveBtn) logoRemoveBtn.style.display = "none";
           if (witnessSignatureToggle) witnessSignatureToggle.style.display = "none";
+          
+          // Hide witness signature elements
+          if (witnessSignatureContainer) witnessSignatureContainer.style.display = "none";
+          // Keep witness signature preview visible if signature exists
+          if (witnessSignaturePreview && currentWitnessSignature) {
+            witnessSignaturePreview.style.display = "block";
+          } else if (witnessSignaturePreview) {
+            witnessSignaturePreview.style.display = "none";
+          }
           
           // Disable persistent fields but keep them visible
           if (clientNameField) clientNameField.disabled = true;
@@ -3145,6 +3197,29 @@
           if (logoUploadBtnInline) logoUploadBtnInline.style.display = "block";
           if (logoRemoveBtn) logoRemoveBtn.style.display = "block";
           if (witnessSignatureToggle) witnessSignatureToggle.style.display = "block";
+          
+          // Restore witness signature elements to their previous state
+          if (witnessSignatureContainer) {
+            // Container should remain hidden when unlocked (default collapsed state)
+            witnessSignatureContainer.style.display = "none";
+          }
+          if (witnessSignaturePreview) {
+            // Restore preview if there's a signature
+            if (currentWitnessSignature) {
+              witnessSignaturePreview.style.display = "block";
+            }
+          }
+          
+          // Fix witness signature button text
+          if (witnessSignatureToggle) {
+            if (currentWitnessSignature) {
+              witnessSignatureToggle.textContent = "Show Signature Box";
+              witnessSignatureToggle.className = "btn btn-secondary";
+            } else {
+              witnessSignatureToggle.textContent = "Add Witness Signature";
+              witnessSignatureToggle.className = "btn btn-primary";
+            }
+          }
           
           // Enable persistent fields
           if (clientNameField) clientNameField.disabled = false;
