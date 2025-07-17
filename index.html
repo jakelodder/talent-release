@@ -3100,6 +3100,7 @@
         const locationField = document.getElementById("location");
         const photographerField = document.getElementById("photographer");
         const witnessField = document.getElementById("witness");
+        const witnessSignatureToggle = document.getElementById("witnessSignatureToggle");
         
         if (isFormLocked) {
           // Locked state
@@ -3114,6 +3115,7 @@
           if (clearHistoryBtn) clearHistoryBtn.style.display = "none";
           if (logoUploadBtnInline) logoUploadBtnInline.style.display = "none";
           if (logoRemoveBtn) logoRemoveBtn.style.display = "none";
+          if (witnessSignatureToggle) witnessSignatureToggle.style.display = "none";
           
           // Disable persistent fields but keep them visible
           if (clientNameField) clientNameField.disabled = true;
@@ -3142,6 +3144,7 @@
           if (clearHistoryBtn) clearHistoryBtn.style.display = "block";
           if (logoUploadBtnInline) logoUploadBtnInline.style.display = "block";
           if (logoRemoveBtn) logoRemoveBtn.style.display = "block";
+          if (witnessSignatureToggle) witnessSignatureToggle.style.display = "block";
           
           // Enable persistent fields
           if (clientNameField) clientNameField.disabled = false;
