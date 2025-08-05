@@ -2973,7 +2973,7 @@
         if (yPos < pageHeight - 30) {
           doc.setFontSize(6); // Smaller privacy notice font
           doc.setFont(undefined, "italic");
-          const privacyText = `PRIVACY NOTICE: We are collecting your information (and any children, if applicable) on behalf of the client for purposes as described above. This information will only be accessed by authorized personnel involved in the project. Some information may be shared with third parties for the purpose of using and managing these images and recordings. Your information will not be disclosed to any other parties unless you have provided consent or we are required or permitted to do so by law.`;
+          const privacyText = `PRIVACY NOTICE: We are collecting your information (and that of any children, if applicable) on behalf of the client for purposes as described above. This information will only be accessed by authorized personnel involved in the project. Some information may be shared with third parties for the purpose of using and managing these images and recordings. Your information will not be disclosed to any other parties unless you have provided consent or we are required or permitted to do so by law.`;
           const splitPrivacy = doc.splitTextToSize(privacyText, contentWidth);
           doc.text(splitPrivacy, margin, yPos);
         }
